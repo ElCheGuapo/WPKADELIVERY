@@ -16,7 +16,1502 @@
         })();
     </script>
     <link rel="icon" href="assets/public/k.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #79dd2b;
+    --primary-dark: #65c022;
+    --text-dark: #1f3040;
+    --text-light: #5a6b7a;
+    --bg-light: #f5f7f9;
+    --bg-white: #ffffff;
+    --border-color: #e1e5e9;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --footer-bg: #1f3040;
+    --map-popup-bg: #162433;
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    --text-dark: #e8eef5;
+    --text-light: #b6c3cf;
+    --bg-white: #0b1117;
+    --bg-light: #0f1720;
+    --border-color: rgba(232, 238, 245, 0.12);
+    --shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 14px 24px rgba(0, 0, 0, 0.55);
+    --footer-bg: #070b10;
+    --map-popup-bg: #070b10;
+    color-scheme: dark;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background-color: var(--bg-white);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Navigation */
+.navbar {
+    background-color: var(--bg-white);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: transform 220ms ease, opacity 220ms ease, box-shadow 220ms ease;
+    will-change: transform;
+}
+
+.navbar.navbar--hidden {
+    transform: translateY(-110%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.nav-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    gap: 1rem;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.lang-toggle {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 45px;
+}
+
+.lang-toggle:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle-track {
+    width: 44px;
+    height: 24px;
+    border-radius: 999px;
+    background: rgba(31, 48, 64, 0.18);
+    border: 1px solid var(--border-color);
+    position: relative;
+    transition: background 180ms ease, border-color 180ms ease;
+}
+
+.theme-toggle-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--bg-white);
+    position: absolute;
+    top: 50%;
+    left: 3px;
+    transform: translateY(-50%);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    transition: transform 180ms ease, background 180ms ease;
+}
+
+.theme-toggle[aria-checked="true"] .theme-toggle-track {
+    background: rgba(121, 221, 43, 0.28);
+}
+
+.theme-toggle[aria-checked="true"] .theme-toggle-thumb {
+    transform: translate(20px, -50%);
+}
+
+.theme-toggle:focus-visible .theme-toggle-track {
+    outline: 3px solid rgba(121, 221, 43, 0.45);
+    outline-offset: 3px;
+}
+
+.logo a {
+    display: block;
+    text-decoration: none;
+}
+
+.logo-img {
+    height: 56px;
+    width: auto;
+    display: block;
+}
+
+@media (max-width: 480px) {
+    .logo-img {
+        height: 44px;
+    }
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-link {
+    color: var(--text-dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+.nav-link.is-active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.nav-link.is-active::after {
+    width: 100%;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    background: none;
+    border: none;
+    cursor: pointer;
+    gap: 4px;
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--text-dark);
+    transition: all 0.3s ease;
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    background: linear-gradient(135deg, #1f3040 0%, #2a4054 100%);
+    color: white;
+    padding: 120px 0 80px;
+    text-align: left;
+    overflow: hidden;
+}
+
+/* Scroll message section (under hero) */
+.scroll-message {
+    background-color: var(--bg-white);
+    padding: 70px 0;
+}
+
+.scroll-message-lines {
+    display: grid;
+    gap: 0.9rem;
+    text-align: left;
+}
+
+.scroll-message-line {
+    color: var(--primary-color);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    font-size: clamp(2.88rem, 5.04vw, 4.72rem);
+    line-height: 0.9;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+}
+
+/* Variants */
+.scroll-message--right .scroll-message-lines {
+    text-align: right;
+    justify-items: end;
+}
+
+.scroll-message--subtle .scroll-message-line {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    letter-spacing: -0.015em;
+}
+
+.hero .container {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.35;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0;
+    text-align: left;
+}
+
+.hero-title,
+.hero-subtitle,
+.hero .btn {
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-video {
+        display: none;
+    }
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.typing-word {
+    display: inline-block;
+    position: relative;
+    margin-left: 0.35rem;
+    color: var(--primary-color);
+    white-space: nowrap;
+}
+
+.typing-word::after {
+    content: '';
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: currentColor;
+    margin-left: 6px;
+    transform: translateY(2px);
+    animation: typing-caret 1s steps(2, end) infinite;
+}
+
+@keyframes typing-caret {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 2.5rem;
+    opacity: 0.95;
+    line-height: 1.8;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-secondary:hover {
+    background-color: white;
+    color: var(--primary-color);
+}
+
+/* Secondary button variant for light backgrounds */
+.btn-secondary--dark {
+    color: var(--text-dark);
+    border-color: var(--text-dark);
+}
+
+.btn-secondary--dark:hover {
+    background-color: var(--text-dark);
+    color: white;
+}
+
+/* Sections */
+section {
+    padding: 80px 0;
+}
+
+.map-section {
+    background-color: var(--bg-white);
+}
+
+.map-container {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+#serviceMap {
+    width: 100%;
+    height: 420px;
+    background: var(--bg-light);
+}
+
+.map-fallback {
+    height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--text-light);
+    background: var(--bg-light);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.section-subtitle {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 1.125rem;
+    margin-bottom: 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Service detail pages */
+.service-detail {
+    background-color: var(--bg-white);
+}
+
+.service-detail-grid {
+    animation: pageFadeUp 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pageFadeUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 22px, 0) scale(0.985);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .service-detail-grid {
+        animation: none;
+    }
+}
+
+.service-detail-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+.service-detail--media-centered .service-detail-grid {
+    align-items: center;
+}
+
+.service-detail--media-centered .service-detail-media {
+    padding-left: 2rem;
+}
+
+@media (max-width: 720px) {
+    .service-detail--media-centered .service-detail-media {
+        padding-left: 0;
+    }
+}
+
+.service-detail--media-spaced .service-detail-media {
+    padding-left: 2rem;
+}
+
+@media (max-width: 720px) {
+    .service-detail--media-spaced .service-detail-media {
+        padding-left: 0;
+    }
+}
+
+.service-detail--subcontracting .service-detail-media img {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    object-fit: contain;
+}
+
+@media (max-width: 768px) {
+    .service-detail--subcontracting .service-detail-media img {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.service-detail--subcontracting .service-detail-grid {
+    gap: 3.75rem;
+    align-items: start;
+}
+
+.service-detail--subcontracting.service-detail--media-spaced .service-detail-media {
+    padding-left: 3rem;
+}
+
+@media (max-width: 768px) {
+    .service-detail--subcontracting .service-detail-grid {
+        gap: 2rem;
+    }
+}
+
+.service-detail .section-title,
+.service-detail .section-subtitle {
+    text-align: left;
+}
+
+.service-detail .section-subtitle {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 720px;
+    margin-bottom: 1.75rem;
+}
+
+.service-detail-text p {
+    color: var(--text-light);
+    font-size: 1.05rem;
+    line-height: 1.85;
+    margin-bottom: 1rem;
+}
+
+.service-detail-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+/* Partners (service detail pages) */
+.partners {
+    margin-top: 2.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.partners-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+}
+
+.partners-logos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    align-items: center;
+}
+
+.partner-logo {
+    width: 100%;
+    max-width: 220px;
+    height: 56px;
+    object-fit: contain;
+    opacity: 0.9;
+    filter: none;
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.partner-logo:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 720px) {
+    .partners-logos {
+        grid-template-columns: 1fr;
+        justify-items: start;
+    }
+
+    .partner-logo {
+        height: 52px;
+    }
+}
+
+.service-detail-media img {
+    width: 115%;
+    max-width: none;
+    height: auto;
+    display: block;
+    border-radius: 0;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    background: var(--bg-white);
+}
+
+.service-detail-media {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+@media (max-width: 720px) {
+    .service-detail-media img {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* Leaflet dark popup + carousel */
+.leaflet-control-attribution {
+    background: rgba(31, 48, 64, 0.85) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.leaflet-control-attribution a {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+    background: var(--map-popup-bg) !important;
+    color: #ffffff !important;
+}
+
+.leaflet-popup-close-button {
+    color: #ffffff !important;
+}
+
+.ka-marker {
+    background: transparent;
+    border: none;
+}
+
+.ka-marker svg {
+    display: block;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.35));
+}
+
+.map-popup-title {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.map-popup-sub {
+    font-size: 0.875rem;
+    opacity: 0.85;
+    margin-bottom: 0.75rem;
+}
+
+.popup-carousel {
+    position: relative;
+    width: 260px;
+}
+
+.carousel-slides {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.carousel-slide {
+    display: none;
+    width: 100%;
+    height: auto;
+}
+
+.carousel-slide.is-active {
+    display: block;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    cursor: pointer;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    font-size: 1.2rem;
+}
+
+.carousel-btn:hover {
+    background: rgba(0, 0, 0, 0.65);
+}
+
+.carousel-btn.prev {
+    left: 8px;
+}
+
+.carousel-btn.next {
+    right: 8px;
+}
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+}
+
+.carousel-dot.is-active {
+    background: var(--primary-color);
+}
+
+/* Services Section */
+.services {
+    background-color: var(--bg-light);
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.service-card {
+    background-color: var(--bg-white);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.service-card.service-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.service-card:hover {
+    transform: translateY(-8px) scale(1.08);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Ensure hover still wins over the reveal transform */
+.service-card.is-visible:hover {
+    transform: translateY(-8px) scale(1.08);
+}
+
+/* Reveal animation (fade in when entering viewport, fade out when leaving) */
+.reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 500ms ease, transform 500ms ease;
+    will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Leaflet: avoid transforms on the map container (can cause markers to disappear while panning) */
+.map-container.reveal,
+#serviceMap.reveal {
+    transform: none;
+    transition: opacity 500ms ease;
+}
+
+.service-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.service-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.service-card p {
+    color: var(--text-light);
+    line-height: 1.7;
+}
+
+/* About Section */
+.about {
+    background-color: var(--bg-white);
+}
+
+/* Mission & Values (image + tabbed overlay) */
+.mission-values {
+    background-color: var(--bg-white);
+    padding: 70px 0;
+}
+
+.mv-split {
+    position: relative;
+    margin-top: 2.5rem;
+    min-height: 520px;
+}
+
+.mv-image {
+    position: absolute;
+    right: 0;
+    top: -40px;
+    height: calc(100% + 80px);
+    width: 70%;
+    border-radius: 0;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    background: var(--bg-light);
+}
+
+.mv-image-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.98) contrast(1.02);
+    opacity: 1;
+    transition: opacity 220ms ease;
+}
+
+.mv-image-img.is-fading {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mv-image-img {
+        transition: none;
+    }
+}
+
+.mv-card {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(460px, 42%);
+    height: clamp(360px, 56vh, 520px);
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--border-color);
+    border-radius: 0;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    backdrop-filter: blur(6px);
+}
+
+:root[data-theme="dark"] .mv-card {
+    background: rgba(11, 17, 23, 0.86);
+}
+
+.mv-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border-color);
+    background: transparent;
+}
+
+.mv-tab {
+    position: relative;
+    padding: 0.9rem 1rem;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 800;
+    color: var(--text-light);
+    letter-spacing: -0.01em;
+    transition: color 180ms ease;
+}
+
+.mv-tab::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    width: 0;
+    height: 3px;
+    background: var(--primary-color);
+    transform: translateX(-50%);
+    transition: width 180ms ease;
+    border-radius: 999px;
+}
+
+.mv-tab:hover::after {
+    width: 56%;
+}
+
+.mv-tab.is-active {
+    color: var(--primary-color);
+}
+
+.mv-tab.is-active::after {
+    width: 56%;
+}
+
+.mv-panels {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.mv-panel {
+    position: absolute;
+    inset: 0;
+    padding: 1.1rem 1.1rem 1.25rem;
+    overflow: auto;
+    transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.mv-panel.is-active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.mv-panel.is-entering {
+    opacity: 0;
+    transform: translateX(-18px);
+}
+
+.mv-panel.is-exiting {
+    opacity: 0;
+    transform: translateX(18px);
+}
+
+.mv-body {
+    color: var(--text-light);
+    font-size: 1.02rem;
+    line-height: 1.75;
+}
+
+.mv-mission-lead {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: calc(1em + 7px);
+    color: var(--text-dark);
+}
+
+.values-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.value-title {
+    color: var(--text-dark);
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+}
+
+.value-text {
+    color: var(--text-light);
+    line-height: 1.75;
+}
+
+/* Mission & Values: make the Values panel slightly more compact to avoid scrolling */
+.mv-panel[data-mv-panel="values"] {
+    padding: 1rem 1rem 1.05rem;
+}
+
+.mv-panel[data-mv-panel="values"] .mv-body {
+    font-size: 0.96rem;
+    line-height: 1.6;
+}
+
+.mv-panel[data-mv-panel="values"] .values-grid {
+    gap: 0.75rem;
+}
+
+.mv-panel[data-mv-panel="values"] .value-text {
+    line-height: 1.55;
+}
+
+.mv-tab:focus-visible {
+    outline: 3px solid rgba(121, 221, 43, 0.45);
+    outline-offset: -3px;
+}
+
+@media (max-width: 900px) {
+    .mv-split {
+        min-height: auto;
+    }
+
+    .mv-image {
+        position: relative;
+        width: 100%;
+        height: 340px;
+        top: 0;
+    }
+
+    .mv-card {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        width: 100%;
+        margin-top: -70px;
+        height: auto;
+    }
+
+    /* On small layouts, panels must participate in normal flow (absolute panels collapse the card height). */
+    .mv-panels {
+        overflow: visible;
+    }
+
+    .mv-panel {
+        position: relative;
+        inset: auto;
+    }
+
+    .mv-panel {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* Mobile: overlay the content box on top of the photo (Mission & Valeurs) */
+@media (max-width: 768px) {
+    .mv-split {
+        margin-top: 1.75rem;
+    }
+
+    .mv-image {
+        height: 420px;
+    }
+
+    .mv-card {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        top: auto;
+        width: auto;
+        margin-top: 0;
+        z-index: 3;
+        /* Give the overlay card a real height so the panels area can render (flex needs a definite height). */
+        height: 320px;
+        min-height: 260px;
+        max-height: 62vh;
+    }
+
+    .mv-panels {
+        overflow: auto;
+        min-height: 0;
+    }
+
+    /* Extra nudge on mobile so the Values content fits comfortably in the overlay card */
+    .mv-panel[data-mv-panel="values"] .mv-body {
+        font-size: 0.93rem;
+    }
+}
+
+.about-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.about-text p {
+    color: var(--text-light);
+    font-size: 1.125rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+}
+
+.about-features {
+    display: flex;
+    gap: 3rem;
+    margin-top: 3rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.feature-item {
+    text-align: center;
+}
+
+.feature-item strong {
+    display: block;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.feature-item span {
+    color: var(--text-light);
+    font-size: 1rem;
+}
+
+/* Contact Section */
+.contact {
+    background-color: var(--bg-light);
+}
+
+.contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4rem;
+    margin-top: 3rem;
+}
+
+.contact-cta {
+    background-color: var(--bg-white);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    max-width: 720px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    gap: 2rem;
+    align-items: center;
+    text-align: left;
+}
+
+.contact-cta-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.contact-cta-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+}
+
+.contact-cta-text {
+    color: var(--text-light);
+    font-size: 1.05rem;
+    line-height: 1.85;
+    margin-bottom: 1.25rem;
+}
+
+.contact-cta-label {
+    color: var(--text-dark);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 720px) {
+    .contact-cta {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .contact-cta-right {
+        align-items: center;
+    }
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.info-item {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+.info-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.info-item h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.info-item p {
+    color: var(--text-light);
+    line-height: 1.7;
+}
+
+.contact-form {
+    background-color: var(--bg-white);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.875rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--footer-bg);
+    color: white;
+    padding: 3rem 0 1.5rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-section h3,
+.footer-section h4 {
+    margin-bottom: 1rem;
+}
+
+.footer-logo {
+    height: 50px;
+    width: auto;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.footer-section p {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.7;
+}
+
+.footer-socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.footer-social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.92);
+    text-decoration: none;
+    transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, color 160ms ease;
+    width: 38px;
+    height: 38px;
+    justify-content: center;
+    overflow: hidden; /* Prevent oversized SVG default sizing from bleeding (Safari) */
+    line-height: 0; /* Avoid baseline/line-box affecting SVG sizing */
+}
+
+.footer-social-link:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.32);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.footer-social-link:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.35);
+    outline-offset: 3px;
+}
+
+.footer-social-link svg {
+    width: 20px;
+    height: 20px;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    fill: currentColor;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-contact-list li {
+    margin-bottom: 0.75rem;
+}
+
+.footer-contact-list a {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-contact-list a:hover {
+    color: white;
+}
+
+.footer-section a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: white;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+    }
+    
+    .lang-toggle {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        min-width: 40px;
+    }
+
+    .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 70px;
+        flex-direction: column;
+        background-color: var(--bg-white);
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        box-shadow: var(--shadow);
+        padding: 2rem 0;
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.125rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-wrapper {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .service-detail-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .about-features {
+        gap: 2rem;
+    }
+
+    section {
+        padding: 60px 0;
+    }
+
+    #serviceMap {
+        height: 320px;
+    }
+
+    .map-fallback {
+        height: 320px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        padding: 80px 0 60px;
+    }
+
+    .hero-title {
+        font-size: 1.75rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .service-card {
+        padding: 2rem;
+    }
+}
+
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -155,8 +1650,1420 @@
         </div>
     </footer>
 
-    <script src="translations.js?v=20260203_05"></script>
-    <script src="script.js"></script>
+    <script>
+// Translation data
+const translations = {
+    en: {
+        navHome: "Home",
+        navServices: "Services",
+        navAbout: "About",
+        navContact: "Contact",
+        heroTitle: "Fast & Reliable Delivery Across Canada",
+        heroTypingBase: " Delivery",
+        heroTypingWords: ["Fast", "Reliable", "Professional", "Eco-friendly"],
+        heroSubtitle: "Delivery, designed as an extension of your brand.",
+        btnGetQuote: "Get a Quote",
+        btnOurServices: "Our Services",
+        servicesTitle: "Our Services",
+        servicesSubtitle: "Delivery solutions built for today’s businesses.",
+        service1Title: "Turnkey Service",
+        service1Desc: "From pickup to your customer’s door, we manage every delivery with rigor, clarity, and the same level of care—no matter the volume.",
+        service1Body: `
+            <p>KA Delivery takes care of all your deliveries, from pickup to your customer’s door.</p>
+            <p>This service is designed for businesses that want to delegate delivery while maintaining reliability, clarity, and consistency.</p>
+
+            <h3>What we manage for you</h3>
+            <ul>
+                <li>End-to-end delivery coordination</li>
+                <li>Volume management, regardless of size</li>
+                <li>Clear tracking and smooth communication</li>
+                <li>A single point of contact</li>
+            </ul>
+
+            <h3>A solution that adapts to your reality</h3>
+            <p>Whether your needs are occasional or recurring, we adapt our organization to ensure reliable, consistent execution.</p>
+
+            <h3>Who is it for?</h3>
+            <ul>
+                <li>SMEs and growing brands</li>
+                <li>Companies looking to outsource their delivery</li>
+                <li>Organizations seeking a simple, structured solution</li>
+            </ul>
+        `,
+        service2Title: "Business Solutions",
+        service2Desc: "Operational support when you need to deliver a package, an order, or a specific volume—without mobilizing internal resources.",
+        service2Body: `
+            <p>KA Delivery provides operational support when you need to deliver a package, an order, or a specific volume—without mobilizing internal resources.</p>
+            <p>This service is designed for companies that already deliver, but need fast and flexible support.</p>
+
+            <h3>What we do</h3>
+            <ul>
+                <li>One-off delivery from point A to point B</li>
+                <li>Urgent or last-minute delivery</li>
+                <li>Transport of single parcels</li>
+                <li>Temporary support for your operations</li>
+            </ul>
+
+            <h3>Who is it for?</h3>
+            <ul>
+                <li>Retailers</li>
+                <li>Companies with occasional deliveries</li>
+                <li>Urgent or unexpected needs</li>
+            </ul>
+        `,
+        service3Title: "Subcontracting",
+        service3Desc: "KA Delivery supports logistics companies as an on-the-ground subcontracting partner, built to strengthen daily operations.",
+        service3Body: `
+            <p>KA Delivery supports logistics companies as an on-the-ground subcontracting partner, built to support your day-to-day operations.</p>
+            <p>We step in to strengthen your capacity, absorb volume, and meet your standards.</p>
+
+            <h3>Operational partners</h3>
+            <p>KA Delivery collaborates with recognized delivery networks—including Nationex, Intelcom, and Obibox—to ensure reliable, structured operations aligned with expected standards.</p>
+
+            <h3>What we take care of</h3>
+            <ul>
+                <li>On-the-ground operational reinforcement</li>
+                <li>Management of one-off or recurring volume</li>
+                <li>Dedicated routes or targeted missions</li>
+                <li>On-time performance and process compliance</li>
+            </ul>
+
+            <h3>Simple integration into your operations</h3>
+            <p>Our teams integrate quickly into your existing processes to ensure smooth, reliable execution.</p>
+
+            <h3>Who is it for?</h3>
+            <ul>
+                <li>Logistics and distribution companies</li>
+                <li>Organizations with volume peaks</li>
+                <li>Teams that need additional on-the-ground capacity</li>
+            </ul>
+        `,
+        aboutTitle: "About KA Delivery",
+        aboutP1: "KA Delivery is a last-mile delivery company that supports businesses, brands, and logistics players in their delivery operations.",
+        aboutP2: "We operate both as a subcontracting partner for established logistics companies and as a turnkey delivery solution for SMEs and growing brands.",
+        aboutP3: "<strong>Our approach is simple:</strong><br><strong>Delivery is the last impression your customer has of you.</strong>",
+        aboutP4: "That’s why we focus on reliability, meeting deadlines, and consistent execution—no matter the volume.",
+        aboutP5: "<strong>As part of a responsible approach,</strong><br>KA Delivery operates with a 100% electric fleet.",
+        feature1Label: "Daily Deliveries",
+        feature2Label: "Countries Served",
+        feature3Label: "On-Time Rate",
+        contactTitle: "Get In Touch",
+        contactCtaTitle: "Ready to deliver at the level your brand deserves?",
+        contactCtaText: "Let’s talk about your needs and see how KA Delivery can support you.",
+        contactCtaButton: "Contact Us",
+        preContactLine1: "Every delivery deserves the same attention.",
+        preContactLine2: "No matter the volume or context.",
+        homeScrollLine1: "Delivery is good.",
+        homeScrollLine2: "Connecting is better.",
+        homeScrollLine3: "At KA Delivery we do both.",
+        partnersTitle: "Our Partners",
+        subcontractingPartnersTitle: "Operational partners",
+        contactAddress: "Address",
+        contactEmail: "Email",
+        contactPhone: "Phone",
+        contactHours: "Business Hours",
+        contactHoursText: "7 Days a Week: 6:00 to 17:00",
+        formName: "Name",
+        formEmail: "Email",
+        formPhone: "Phone",
+        formMessage: "Message",
+        btnSendMessage: "Send Message",
+        footerTagline: "Your trusted delivery partner across Canada and Europe.",
+        footerQuickLinks: "Quick Links",
+        footerServices: "Services",
+        footerPackageDelivery: "Turnkey Service",
+        footerBusinessSolutions: "Business Solutions",
+        footerSameDayDelivery: "Subcontracting",
+        footerCopyright: "© 2024 KA Delivery. All rights reserved.",
+
+        missionValuesTitle: "Mission & Values",
+        missionTitle: "Mission",
+        missionBody: "<span class=\"mv-mission-lead\"><strong>Our goal is simple:</strong></span> Deliver <strong>reliable</strong> and <strong>consistent</strong> service, designed as an extension of the <strong>customer experience</strong>, so businesses can <strong>protect</strong> their <strong>brand image</strong> all the way to the customer’s door.",
+        valuesTitle: "Values",
+        valuesBody: `
+            <div class="values-grid">
+                <div class="value">
+                    <div class="value-title">Reliability</div>
+                    <div class="value-text">Keep our commitments, meet deadlines, and deliver consistent execution—every day.</div>
+                </div>
+                <div class="value">
+                    <div class="value-title">High Standards</div>
+                    <div class="value-text">Apply the same quality standards to every delivery, no matter the volume or context.</div>
+                </div>
+                <div class="value">
+                    <div class="value-title">Responsibility</div>
+                    <div class="value-text">Operate thoughtfully, with a 100% electric fleet,<br>and practices adapted to urban realities.</div>
+                </div>
+            </div>
+        `,
+
+        mapTitle: "Service Areas",
+        mapSubtitle: "Wherever your customers are, we deliver.",
+        mapCityQuebec: "Quebec City",
+        mapCityMontreal: "Montreal",
+        mapCityOttawa: "Ottawa",
+        mapCityAmsterdam: "Amsterdam",
+        mapCityRotterdam: "Rotterdam",
+        mapServiceAvailable: "Service available",
+        mapFallback: "Map failed to load. Please check your internet connection."
+    },
+    fr: {
+        navHome: "Accueil",
+        navServices: "Services",
+        navAbout: "À propos",
+        navContact: "Contact",
+        heroTitle: "Livraison Rapide et Fiable à Travers le Canada",
+        heroTypingBase: "Livraison",
+        heroTypingWords: ["Rapide", "Fiable", "Professionelle", "Durable"],
+        heroSubtitle: "La livraison, pensée comme une extension de votre marque.",
+        btnGetQuote: "Obtenir un Devis",
+        btnOurServices: "Nos Services",
+        servicesTitle: "Nos Services",
+        servicesSubtitle: "Des solutions de livraison adaptées aux réalités des entreprises d’aujourd’hui.",
+        service1Title: "Service Clé en Mains",
+        service1Desc: "KA Delivery prend en charge l’ensemble de vos livraisons, de la prise en charge jusqu’à la porte du client.",
+        service1Body: `
+            <p>KA Delivery prend en charge l’ensemble de vos livraisons,de la prise en charge jusqu’à la porte du client.</p>
+            <p>Ce service est conçu pour les entreprises qui souhaitent déléguer leur livraison<br>tout en conservant fiabilité, clarté et constance.</p>
+
+            <h3>Ce que nous gérons pour vous</h3>
+            <ul>
+                <li>Coordination complète des livraisons</li>
+                <li>Gestion des volumes, peu importe la taille</li>
+                <li>Suivi clair et communication fluide</li>
+                <li>Un seul point de contact</li>
+            </ul>
+
+            <h3>Une solution qui s’adapte à votre réalité</h3>
+            <p>Que vos besoins soient ponctuels ou récurrents, nous adaptons notre organisation pour assurer une exécution fiable et constante.</p>
+
+            <h3>Pour qui ?</h3>
+            <ul>
+                <li>PME et marques en croissance</li>
+                <li>Entreprises souhaitant externaliser leur livraison</li>
+                <li>Organisations cherchant une solution simple et structurée</li>
+            </ul>
+        `,
+        service2Title: "Solutions D'Entreprises",
+        service2Desc: "KA Delivery intervient en soutien opérationnel,lorsque vous avez besoin de livrer un colis, une commande ou un volume précis, sans mobiliser vos ressources internes.",
+        service2Body: `
+            <p>KA Delivery intervient en soutien opérationnel,lorsque vous avez besoin de livrer un colis, une commande ou un volume précis, sans mobiliser vos ressources internes.</p>
+            <p>Ce service est conçu pour les entreprises<br>qui livrent déjà, mais ont besoin<br>d’un appui rapide et flexible.</p>
+
+            <h3>Ce que nous faisons</h3>
+            <ul>
+                <li>Livraison ponctuelle du point A au point B</li>
+                <li>Livraison urgente ou de dernière minute</li>
+                <li>Transport de colis isolés</li>
+                <li>Soutien temporaire à vos opérations</li>
+            </ul>
+
+            <h3>Pour qui ?</h3>
+            <ul>
+                <li>Commerces</li>
+                <li>Entreprises avec livraisons occasionnelles</li>
+                <li>Besoins urgents ou imprévus</li>
+            </ul>
+        `,
+        service3Title: "Sous-Traitance",
+        service3Desc: "KA Delivery accompagne les entreprises de logistique en tant que partenaire de sous-traitance terrain, capable de soutenir vos opérations au quotidien.",
+        service3Body: `
+            <p>KA Delivery accompagne les entreprises de logistique en tant que partenaire de sous-traitance terrain, capable de soutenir vos opérations au quotidien.</p>
+            <p>Nous intervenons pour renforcer votre capacité,absorber des volumes et respecter vos standards.</p>
+
+            <h3>Partenaires opérationnels</h3>
+            <p>KA Delivery collabore avec des réseaux de livraison reconnus,dont Nationex, Intelcom et Obibox,afin d’assurer des opérations fiables, structurées<br>et conformes aux standards attendus.</p>
+
+            <h3>Ce que nous prenons en charge</h3>
+            <ul>
+                <li>Renfort opérationnel terrain</li>
+                <li>Gestion de volumes ponctuels ou récurrents</li>
+                <li>Routes dédiées ou missions ciblées</li>
+                <li>Respect des délais et des procédures</li>
+            </ul>
+
+            <h3>Une intégration simple à vos opérations</h3>
+            <p>Nos équipes s’intègrent rapidement<br>à vos processus existants<br>pour assurer une exécution fluide et fiable.</p>
+
+            <h3>Pour qui ?</h3>
+            <ul>
+                <li>Entreprises de logistique et de distribution</li>
+                <li>Acteurs ayant des pics de volume</li>
+                <li>Organisations nécessitant un renfort terrain</li>
+            </ul>
+        `,
+        aboutTitle: "À Propos de KA Delivery",
+        aboutP1: "KA Delivery est une entreprise de livraison spécialisée dans la livraison du dernier kilomètre, qui accompagne les entreprises, marques et acteurs logistiques dans leurs opérations de livraison.",
+        aboutP2: "Nous intervenons à la fois comme partenaire de sous-traitance pour des entreprises de logistique établies, et comme solution de livraison clé en main pour des PME et marques en croissance.",
+        aboutP3: "<strong>Notre approche est simple :</strong><br><strong>La livraison est la dernière impression que votre client garde de vous.</strong>",
+        aboutP4: "C’est pourquoi nous misons sur la fiabilité, le respect des délais et une exécution constante, peu importe le volume.",
+        aboutP5: "<strong>Dans une démarche responsable,</strong><br>KA Delivery opère avec une flotte 100 % électrique.",
+        feature1Label: "Livraisons Quotidiennes",
+        feature2Label: "Pays Desservis",
+        feature3Label: "Taux de Ponctualité",
+        contactTitle: "Contactez-Nous",
+        contactCtaTitle: "Prêt à livrer à la hauteur de votre image ?",
+        contactCtaText: "Parlons de vos besoins et voyons comment KA Delivery peut vous accompagner.",
+        contactCtaButton: "Contactez Nous",
+        preContactLine1: "Chaque livraison mérite la même attention.",
+        preContactLine2: "Peu importe le volume ou le contexte.",
+        homeScrollLine1: "Livrer c'est bien.",
+        homeScrollLine2: "Connecter c'est mieux.",
+        homeScrollLine3: "Chez KA Delivery, on fait les deux.",
+        partnersTitle: "Nos partenaires",
+        subcontractingPartnersTitle: "Partenaires opérationnels",
+        contactAddress: "Adresse",
+        contactEmail: "Courriel",
+        contactPhone: "Téléphone",
+        contactHours: "Heures d'Ouverture",
+        contactHoursText: "7 jours sur 7 : 6 h 00 à 17 h 00",
+        formName: "Nom",
+        formEmail: "Courriel",
+        formPhone: "Téléphone",
+        formMessage: "Message",
+        btnSendMessage: "Envoyer le Message",
+        footerTagline: "Votre partenaire de livraison de confiance au Canada et en Europe.",
+        footerQuickLinks: "Liens Rapides",
+        footerServices: "Services",
+        footerPackageDelivery: "Service Clé en Mains",
+        footerBusinessSolutions: "Solutions D'Entreprises",
+        footerSameDayDelivery: "Sous-Traitance",
+        footerCopyright: "© 2024 KA Delivery. Tous droits réservés.",
+
+        missionValuesTitle: "Mission & Valeurs",
+        missionTitle: "Mission",
+        missionBody: "<span class=\"mv-mission-lead\"><strong>Notre objectif est simple :</strong></span> offrir une livraison <strong>fiable</strong> et <strong>cohérente</strong>, pensée comme une extension de l’<strong>expérience client</strong>, afin d’aider les entreprises à <strong>protéger</strong> leur <strong>image</strong> jusqu’à la porte du client.",
+        valuesTitle: "Valeurs",
+        valuesBody: `
+            <div class="values-grid">
+                <div class="value">
+                    <div class="value-title">Fiabilité</div>
+                    <div class="value-text">Tenir nos engagements, respecter les délais et assurer une exécution constante, chaque jour.</div>
+                </div>
+                <div class="value">
+                    <div class="value-title">Exigence</div>
+                    <div class="value-text">Appliquer les mêmes standards de qualité<br>à chaque livraison, peu importe le volume ou le contexte.</div>
+                </div>
+                <div class="value">
+                    <div class="value-title">Responsabilité</div>
+                    <div class="value-text">Opérer de manière consciente, avec une flotte 100 % électrique,<br>et des pratiques adaptées aux réalités urbaines.</div>
+                </div>
+            </div>
+        `,
+
+        mapTitle: "Zones desservies",
+        mapSubtitle: "Là où vos clients sont, nous livrons.",
+        mapCityQuebec: "Ville de Québec",
+        mapCityMontreal: "Montréal",
+        mapCityOttawa: "Ottawa",
+        mapCityAmsterdam: "Amsterdam",
+        mapCityRotterdam: "Rotterdam",
+        mapServiceAvailable: "Service disponible",
+        mapFallback: "Impossible de charger la carte. Veuillez vérifier votre connexion internet."
+    }
+};
+
+// Language management
+let currentLang = localStorage.getItem('language') || 'en';
+
+// Function to set language
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('language', lang);
+    document.documentElement.lang = lang;
+    updateTranslations();
+    document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
+}
+
+// Function to update all translations
+function updateTranslations() {
+    const langData = translations[currentLang];
+    
+    // Update navigation
+    document.querySelectorAll('[data-translate="navHome"]').forEach(el => el.textContent = langData.navHome);
+    document.querySelectorAll('[data-translate="navServices"]').forEach(el => el.textContent = langData.navServices);
+    document.querySelectorAll('[data-translate="navAbout"]').forEach(el => el.textContent = langData.navAbout);
+    document.querySelectorAll('[data-translate="navContact"]').forEach(el => el.textContent = langData.navContact);
+    
+    // Update hero section
+    // Note: hero title is handled by the typing effect in script.js (EN/FR), so we don't overwrite it here.
+    document.querySelectorAll('[data-translate="heroSubtitle"]').forEach(el => el.innerHTML = langData.heroSubtitle);
+    document.querySelectorAll('[data-translate="btnGetQuote"]').forEach(el => el.textContent = langData.btnGetQuote);
+    document.querySelectorAll('[data-translate="btnOurServices"]').forEach(el => el.textContent = langData.btnOurServices);
+    
+    // Update services
+    document.querySelectorAll('[data-translate="servicesTitle"]').forEach(el => el.textContent = langData.servicesTitle);
+    document.querySelectorAll('[data-translate="servicesSubtitle"]').forEach(el => el.textContent = langData.servicesSubtitle);
+    document.querySelectorAll('[data-translate="service1Title"]').forEach(el => el.textContent = langData.service1Title);
+    document.querySelectorAll('[data-translate="service1Desc"]').forEach(el => el.textContent = langData.service1Desc);
+    document.querySelectorAll('[data-translate="service1Body"]').forEach(el => el.innerHTML = langData.service1Body);
+    document.querySelectorAll('[data-translate="service2Title"]').forEach(el => el.textContent = langData.service2Title);
+    document.querySelectorAll('[data-translate="service2Desc"]').forEach(el => el.textContent = langData.service2Desc);
+    document.querySelectorAll('[data-translate="service2Body"]').forEach(el => el.innerHTML = langData.service2Body);
+    document.querySelectorAll('[data-translate="service3Title"]').forEach(el => el.textContent = langData.service3Title);
+    document.querySelectorAll('[data-translate="service3Desc"]').forEach(el => el.textContent = langData.service3Desc);
+    document.querySelectorAll('[data-translate="service3Body"]').forEach(el => el.innerHTML = langData.service3Body);
+
+    // Mission & Values
+    document.querySelectorAll('[data-translate="missionValuesTitle"]').forEach(el => el.textContent = langData.missionValuesTitle);
+    document.querySelectorAll('[data-translate="missionTitle"]').forEach(el => el.textContent = langData.missionTitle);
+    document.querySelectorAll('[data-translate="valuesTitle"]').forEach(el => el.textContent = langData.valuesTitle);
+    document.querySelectorAll('[data-translate="missionBody"]').forEach(el => el.innerHTML = langData.missionBody);
+    document.querySelectorAll('[data-translate="valuesBody"]').forEach(el => el.innerHTML = langData.valuesBody);
+    document.querySelectorAll('[data-translate="service4Title"]').forEach(el => el.textContent = langData.service4Title);
+    document.querySelectorAll('[data-translate="service4Desc"]').forEach(el => el.textContent = langData.service4Desc);
+    document.querySelectorAll('[data-translate="service5Title"]').forEach(el => el.textContent = langData.service5Title);
+    document.querySelectorAll('[data-translate="service5Desc"]').forEach(el => el.textContent = langData.service5Desc);
+    document.querySelectorAll('[data-translate="service6Title"]').forEach(el => el.textContent = langData.service6Title);
+    document.querySelectorAll('[data-translate="service6Desc"]').forEach(el => el.textContent = langData.service6Desc);
+    
+    // Update about section
+    document.querySelectorAll('[data-translate="aboutTitle"]').forEach(el => el.textContent = langData.aboutTitle);
+    document.querySelectorAll('[data-translate="aboutP1"]').forEach(el => el.textContent = langData.aboutP1);
+    document.querySelectorAll('[data-translate="aboutP2"]').forEach(el => el.textContent = langData.aboutP2);
+    document.querySelectorAll('[data-translate="aboutP3"]').forEach(el => el.innerHTML = langData.aboutP3);
+    document.querySelectorAll('[data-translate="aboutP4"]').forEach(el => el.textContent = langData.aboutP4);
+    document.querySelectorAll('[data-translate="aboutP5"]').forEach(el => el.innerHTML = langData.aboutP5);
+    document.querySelectorAll('[data-translate="feature1Label"]').forEach(el => el.textContent = langData.feature1Label);
+    document.querySelectorAll('[data-translate="feature2Label"]').forEach(el => el.textContent = langData.feature2Label);
+    document.querySelectorAll('[data-translate="feature3Label"]').forEach(el => el.textContent = langData.feature3Label);
+    
+    // Update contact section
+    document.querySelectorAll('[data-translate="contactTitle"]').forEach(el => el.textContent = langData.contactTitle);
+    document.querySelectorAll('[data-translate="contactCtaTitle"]').forEach(el => el.textContent = langData.contactCtaTitle);
+    document.querySelectorAll('[data-translate="contactCtaText"]').forEach(el => el.textContent = langData.contactCtaText);
+    document.querySelectorAll('[data-translate="contactCtaButton"]').forEach(el => el.textContent = langData.contactCtaButton);
+    document.querySelectorAll('[data-translate="preContactLine1"]').forEach(el => el.textContent = langData.preContactLine1);
+    document.querySelectorAll('[data-translate="preContactLine2"]').forEach(el => el.textContent = langData.preContactLine2);
+    document.querySelectorAll('[data-translate="homeScrollLine1"]').forEach(el => el.textContent = langData.homeScrollLine1);
+    document.querySelectorAll('[data-translate="homeScrollLine2"]').forEach(el => el.textContent = langData.homeScrollLine2);
+    document.querySelectorAll('[data-translate="homeScrollLine3"]').forEach(el => el.textContent = langData.homeScrollLine3);
+    document.querySelectorAll('[data-translate="partnersTitle"]').forEach(el => el.textContent = langData.partnersTitle);
+    document.querySelectorAll('[data-translate="subcontractingPartnersTitle"]').forEach(el => el.textContent = langData.subcontractingPartnersTitle);
+    document.querySelectorAll('[data-translate="contactAddress"]').forEach(el => el.textContent = langData.contactAddress);
+    document.querySelectorAll('[data-translate="contactEmail"]').forEach(el => el.textContent = langData.contactEmail);
+    document.querySelectorAll('[data-translate="contactPhone"]').forEach(el => el.textContent = langData.contactPhone);
+    document.querySelectorAll('[data-translate="contactHours"]').forEach(el => el.textContent = langData.contactHours);
+    document.querySelectorAll('[data-translate="contactHoursText"]').forEach(el => el.innerHTML = langData.contactHoursText);
+    document.querySelectorAll('[data-translate="formName"]').forEach(el => el.textContent = langData.formName);
+    document.querySelectorAll('[data-translate="formEmail"]').forEach(el => el.textContent = langData.formEmail);
+    document.querySelectorAll('[data-translate="formPhone"]').forEach(el => el.textContent = langData.formPhone);
+    document.querySelectorAll('[data-translate="formMessage"]').forEach(el => el.textContent = langData.formMessage);
+    document.querySelectorAll('[data-translate="btnSendMessage"]').forEach(el => el.textContent = langData.btnSendMessage);
+    
+    // Update footer
+    document.querySelectorAll('[data-translate="footerTagline"]').forEach(el => el.textContent = langData.footerTagline);
+    document.querySelectorAll('[data-translate="footerQuickLinks"]').forEach(el => el.textContent = langData.footerQuickLinks);
+    document.querySelectorAll('[data-translate="footerServices"]').forEach(el => el.textContent = langData.footerServices);
+    document.querySelectorAll('[data-translate="footerPackageDelivery"]').forEach(el => el.textContent = langData.footerPackageDelivery);
+    document.querySelectorAll('[data-translate="footerExpressShipping"]').forEach(el => el.textContent = langData.footerExpressShipping);
+    document.querySelectorAll('[data-translate="footerBusinessSolutions"]').forEach(el => el.textContent = langData.footerBusinessSolutions);
+    document.querySelectorAll('[data-translate="footerSameDayDelivery"]').forEach(el => el.textContent = langData.footerSameDayDelivery);
+    document.querySelectorAll('[data-translate="footerCopyright"]').forEach(el => el.textContent = langData.footerCopyright);
+
+    // Update map section
+    document.querySelectorAll('[data-translate="mapTitle"]').forEach(el => el.textContent = langData.mapTitle);
+    document.querySelectorAll('[data-translate="mapSubtitle"]').forEach(el => el.textContent = langData.mapSubtitle);
+    
+    // Update language button (show target language, not current)
+    const nextLang = currentLang === 'en' ? 'fr' : 'en';
+    document.getElementById('currentLang').textContent = nextLang.toUpperCase();
+}
+
+// Initialize language on page load
+document.addEventListener('DOMContentLoaded', () => {
+    setLanguage(currentLang);
+    
+    // Language toggle button
+    const langToggle = document.getElementById('langToggle');
+    if (langToggle) {
+        langToggle.addEventListener('click', () => {
+            const newLang = currentLang === 'en' ? 'fr' : 'en';
+            setLanguage(newLang);
+        });
+    }
+});
+
+    </script>
+    <script>
+// Mobile Menu Toggle
+const menuToggle = document.querySelector('.menu-toggle');
+const navMenu = document.querySelector('.nav-menu');
+const navLinks = document.querySelectorAll('.nav-link');
+
+if (menuToggle && navMenu) {
+    menuToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+    
+        // Animate hamburger menu
+        const spans = menuToggle.querySelectorAll('span');
+        if (navMenu.classList.contains('active')) {
+            spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+            spans[1].style.opacity = '0';
+            spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+        } else {
+            spans[0].style.transform = 'none';
+            spans[1].style.opacity = '1';
+            spans[2].style.transform = 'none';
+        }
+    });
+}
+
+// Close menu when clicking on a link
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        const spans = menuToggle.querySelectorAll('span');
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+    });
+});
+
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            const offsetTop = target.offsetTop - 80;
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    });
+});
+
+// Contact Form Handling
+const contactForm = document.getElementById('contactForm');
+
+if (contactForm) contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get form values
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const message = document.getElementById('message').value;
+    
+    // Simple form validation
+    if (!name || !email || !message) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+    }
+    
+    // In a real application, you would send this data to a server
+    // For now, we'll just show a success message
+    alert('Thank you for your message! We will get back to you soon.');
+    
+    // Reset form
+    contactForm.reset();
+});
+
+// Navbar scroll effect
+let lastScroll = 0;
+const navbar = document.querySelector('.navbar');
+
+let lastScrollY = window.pageYOffset || 0;
+let scrollTicking = false;
+
+function handleNavbarOnScroll() {
+    if (!navbar) return;
+
+    const currentScroll = window.pageYOffset || 0;
+
+    // Keep the existing shadow behavior
+    if (currentScroll > 100) {
+        navbar.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.15)';
+    } else {
+        navbar.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+    }
+
+    // Always show near the very top
+    if (currentScroll < 20) {
+        navbar.classList.remove('navbar--hidden');
+        lastScrollY = currentScroll;
+        return;
+    }
+
+    const delta = currentScroll - lastScrollY;
+
+    // Ignore tiny movements to avoid jitter
+    if (Math.abs(delta) < 6) return;
+
+    if (delta > 0) {
+        // Scrolling down → hide
+        navbar.classList.add('navbar--hidden');
+    } else {
+        // Scrolling up → show
+        navbar.classList.remove('navbar--hidden');
+    }
+
+    lastScrollY = currentScroll;
+}
+
+window.addEventListener('scroll', () => {
+    if (!scrollTicking) {
+        scrollTicking = true;
+        window.requestAnimationFrame(() => {
+            handleNavbarOnScroll();
+            scrollTicking = false;
+        });
+    }
+});
+
+// Add animation on scroll (simple fade-in effect)
+const observerOptions = {
+    threshold: [0, 0.12],
+    rootMargin: '0px 0px -15% 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        entry.target.classList.toggle('is-visible', entry.isIntersecting);
+
+        // If the map becomes visible, Leaflet sometimes needs a resize tick.
+        // Note: avoid animating/transforms on the Leaflet container itself; it can cause marker glitches.
+        const isMapArea = entry.target.id === 'serviceMap' || entry.target.classList?.contains('map-container');
+        if (entry.isIntersecting && isMapArea && window.__serviceMap?.invalidateSize) {
+            setTimeout(() => window.__serviceMap.invalidateSize(), 100);
+        }
+    });
+}, observerOptions);
+
+// Observe service cards and other elements
+document.addEventListener('DOMContentLoaded', () => {
+    const revealTargets = document.querySelectorAll([
+        '.service-card',
+        '.map-container',
+        '.about-text',
+        '.about-features .feature-item',
+        '.contact-wrapper',
+        '.footer-section',
+        '.footer-bottom'
+    ].join(','));
+
+    revealTargets.forEach((el) => {
+        el.classList.add('reveal');
+        observer.observe(el);
+    });
+
+    initNavScrollSpy();
+    initServiceMap();
+    initThemeToggle();
+    initScrollMessageLines();
+    initMissionValuesSection();
+
+    // Typing effect (FR hero title)
+    setupHeroTyping(document.documentElement.lang || 'en');
+});
+
+function initMissionValuesSection() {
+    const root = document.querySelector('[data-mv]');
+    if (!root) return;
+
+    const img = root.querySelector('.mv-image-img');
+    const tabs = Array.from(root.querySelectorAll('[data-mv-tab]'));
+    const panels = Array.from(root.querySelectorAll('[data-mv-panel]'));
+    if (tabs.length === 0 || panels.length === 0) return;
+
+    let hideTimer = null;
+    let imageToken = 0;
+
+    const setActive = (key) => {
+        if (hideTimer) {
+            clearTimeout(hideTimer);
+            hideTimer = null;
+        }
+
+        const nextPanel = panels.find((p) => p.getAttribute('data-mv-panel') === key);
+        const prevPanel = panels.find((p) => p.classList.contains('is-active'));
+
+        if (!nextPanel) return;
+        if (prevPanel === nextPanel) return;
+
+        tabs.forEach((t) => {
+            const isActive = t.getAttribute('data-mv-tab') === key;
+            t.classList.toggle('is-active', isActive);
+            t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        // Start exit transition for current panel (slide out to the right)
+        if (prevPanel) {
+            prevPanel.hidden = false;
+            prevPanel.classList.remove('is-entering');
+            prevPanel.classList.add('is-exiting');
+            prevPanel.classList.remove('is-active');
+        }
+
+        // Prepare next panel to enter from the left
+        nextPanel.hidden = false;
+        nextPanel.classList.remove('is-exiting');
+        nextPanel.classList.remove('is-active');
+        nextPanel.classList.add('is-entering');
+
+        // Next frame: trigger enter transition
+        window.requestAnimationFrame(() => {
+            nextPanel.classList.remove('is-entering');
+            nextPanel.classList.add('is-active');
+        });
+
+        // After transition: hide all non-active panels and cleanup state classes
+        hideTimer = window.setTimeout(() => {
+            panels.forEach((p) => {
+                const isActive = p === nextPanel;
+                p.hidden = !isActive;
+                p.classList.toggle('is-active', isActive);
+                p.classList.remove('is-entering');
+                p.classList.remove('is-exiting');
+            });
+        }, 260);
+
+        if (img) {
+            const src = key === 'values'
+                ? img.getAttribute('data-src-values')
+                : img.getAttribute('data-src-mission');
+            const fallbackSrc = key === 'values'
+                ? img.getAttribute('data-fallback-values')
+                : img.getAttribute('data-fallback-mission');
+
+            if (src && img.getAttribute('src') !== src) {
+                const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (reduceMotion) {
+                    img.setAttribute('src', src);
+                } else {
+                    const token = ++imageToken;
+                    img.classList.add('is-fading');
+
+                    // Swap while faded out, then fade back in once loaded.
+                    window.setTimeout(() => {
+                        if (token !== imageToken) return;
+
+                        let triedFallback = false;
+
+                        const finish = () => {
+                            if (token !== imageToken) return;
+                            window.requestAnimationFrame(() => img.classList.remove('is-fading'));
+                        };
+
+                        const attach = () => {
+                            img.addEventListener('load', finish, { once: true });
+                            img.addEventListener('error', () => {
+                                if (token !== imageToken) return;
+                                if (!triedFallback && fallbackSrc) {
+                                    triedFallback = true;
+                                    attach();
+                                    img.setAttribute('src', fallbackSrc);
+                                    return;
+                                }
+                                finish();
+                            }, { once: true });
+                        };
+
+                        attach();
+                        img.setAttribute('src', src);
+
+                        // Fallback in case load/error doesn't fire (shouldn't happen, but keep UI responsive)
+                        window.setTimeout(finish, 800);
+                    }, 160);
+                }
+            }
+        }
+    };
+
+    // Default to mission
+    setActive('mission');
+
+    tabs.forEach((t) => {
+        t.addEventListener('click', () => {
+            const key = t.getAttribute('data-mv-tab');
+            if (!key) return;
+            setActive(key);
+        });
+    });
+}
+
+function initScrollMessageLines() {
+    const containers = Array.from(document.querySelectorAll('[data-scroll-lines]'));
+    if (containers.length === 0) return;
+
+    // Per-line speed multipliers so the motion feels less "robotic".
+    // If there are more lines than defaults, fall back to 1.
+    // 1st line: baseline, 2nd line: slightly slower, 3rd line: half travel so it doesn't mirror line 1.
+    const defaultSpeeds = [1.0, 0.82, 0.5, 0.9];
+
+    let ticking = false;
+
+    const clamp01 = (n) => Math.max(0, Math.min(1, n));
+
+    const update = () => {
+        ticking = false;
+
+        const vh = window.innerHeight || document.documentElement.clientHeight || 0;
+        const baseMaxShift = Math.min(90, Math.max(45, window.innerWidth * 0.09));
+
+        for (const container of containers) {
+            const lines = Array.from(container.querySelectorAll('.scroll-message-line[data-direction]'));
+            if (lines.length === 0) continue;
+
+            const rect = container.getBoundingClientRect();
+            const progress = clamp01((vh - rect.top) / (vh + rect.height));
+
+            const mult = Number(container.getAttribute('data-shift-mult') || '');
+            const shiftMult = Number.isFinite(mult) && mult > 0 ? mult : 1;
+
+            const shift = (progress - 0.5) * 2 * (baseMaxShift * shiftMult);
+
+            for (let i = 0; i < lines.length; i += 1) {
+                const el = lines[i];
+                const dir = el.getAttribute('data-direction');
+                const speedAttr = Number(el.getAttribute('data-speed') || '');
+                const speed = Number.isFinite(speedAttr) && speedAttr > 0 ? speedAttr : (defaultSpeeds[i] ?? 1);
+                const x = (dir === 'left' ? -shift : shift) * speed;
+                el.style.transform = `translate3d(${x.toFixed(2)}px, 0, 0)`;
+            }
+        }
+    };
+
+    const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(update);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+}
+
+function initThemeToggle() {
+    const btn = document.getElementById('themeToggle');
+    if (!btn) return;
+
+    const applyTheme = (theme) => {
+        document.documentElement.dataset.theme = theme;
+        btn.setAttribute('aria-checked', theme === 'dark' ? 'true' : 'false');
+        updateHeroVideoForTheme(theme);
+        updateServiceIconsForTheme(theme);
+        updateNavbarLogoForTheme(theme);
+    };
+
+    const getEffectiveTheme = () => {
+        const stored = (() => {
+            try {
+                return localStorage.getItem('theme');
+            } catch (_) {
+                return null;
+            }
+        })();
+
+        if (stored === 'dark' || stored === 'light') return stored;
+
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return prefersDark ? 'dark' : 'light';
+    };
+
+    // Sync UI on load (head script sets dataset early; fall back if missing)
+    const current = document.documentElement.dataset.theme || getEffectiveTheme();
+    applyTheme(current === 'dark' ? 'dark' : 'light');
+
+    btn.addEventListener('click', () => {
+        const next = (document.documentElement.dataset.theme === 'dark') ? 'light' : 'dark';
+        applyTheme(next);
+        try {
+            localStorage.setItem('theme', next);
+        } catch (_) {}
+    });
+}
+
+function updateNavbarLogoForTheme(theme) {
+    const logo = document.getElementById('navbarLogo') || document.querySelector('.logo-img');
+    if (!logo) return;
+
+    const lightSrc = logo.getAttribute('data-src-light');
+    const darkSrc = logo.getAttribute('data-src-dark');
+    const nextSrc = theme === 'dark' ? darkSrc : lightSrc;
+    if (!nextSrc) return;
+
+    const currentSrc = logo.getAttribute('src');
+    if (currentSrc === nextSrc) return;
+
+    logo.setAttribute('src', nextSrc);
+}
+
+function updateHeroVideoForTheme(theme) {
+    const video = document.querySelector('.hero-video');
+    const source = document.getElementById('heroVideoSource');
+    if (!video || !source) return;
+
+    const lightSrc = source.getAttribute('data-src-light');
+    const darkSrc = source.getAttribute('data-src-dark');
+    const nextSrc = theme === 'dark' ? darkSrc : lightSrc;
+    if (!nextSrc) return;
+
+    const currentSrc = source.getAttribute('src');
+    if (currentSrc === nextSrc) return;
+
+    source.setAttribute('src', nextSrc);
+
+    try {
+        video.load();
+        const p = video.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+    } catch (_) {
+        // ignore
+    }
+}
+
+function updateServiceIconsForTheme(theme) {
+    const icons = Array.from(document.querySelectorAll('.service-icon-img[data-src-light][data-src-dark]'));
+    if (icons.length === 0) return;
+
+    for (const img of icons) {
+        const nextSrc = theme === 'dark' ? img.getAttribute('data-src-dark') : img.getAttribute('data-src-light');
+        if (!nextSrc) continue;
+        if (img.getAttribute('src') === nextSrc) continue;
+        img.setAttribute('src', nextSrc);
+    }
+}
+
+function initNavScrollSpy() {
+    const links = Array.from(document.querySelectorAll('.nav-link[href]'));
+    if (links.length === 0) return;
+
+    // Map section id -> links that target it (usually 1:1)
+    const idToLinks = new Map();
+    const idToSection = new Map();
+
+    for (const link of links) {
+        const href = link.getAttribute('href') || '';
+        if (!href.includes('#')) continue;
+
+        let id = '';
+        if (href.startsWith('#')) {
+            id = href.slice(1);
+        } else {
+            // Handle absolute/relative URLs that point to this page with a hash.
+            try {
+                const url = new URL(href, window.location.href);
+                if (url.pathname !== window.location.pathname) continue;
+                id = (url.hash || '').replace(/^#/, '');
+            } catch (_) {
+                continue;
+            }
+        }
+
+        if (!id) continue;
+        const section = document.getElementById(id);
+        if (!section) continue;
+
+        idToSection.set(id, section);
+        const arr = idToLinks.get(id) || [];
+        arr.push(link);
+        idToLinks.set(id, arr);
+    }
+
+    if (idToSection.size === 0) return; // e.g. service detail pages
+
+    const ratios = new Map();
+
+    const setActive = (activeId) => {
+        for (const [id, linkList] of idToLinks.entries()) {
+            const isActive = id === activeId;
+            for (const a of linkList) {
+                a.classList.toggle('is-active', isActive);
+                if (isActive) a.setAttribute('aria-current', 'page');
+                else a.removeAttribute('aria-current');
+            }
+        }
+    };
+
+    const pickBest = () => {
+        let bestId = '';
+        let bestRatio = 0;
+        for (const [id, ratio] of ratios.entries()) {
+            if (ratio > bestRatio) {
+                bestRatio = ratio;
+                bestId = id;
+            }
+        }
+        if (bestId) setActive(bestId);
+    };
+
+    const spyObserver = new IntersectionObserver(
+        (entries) => {
+            for (const entry of entries) {
+                const id = entry.target.id;
+                if (!id) continue;
+                ratios.set(id, entry.isIntersecting ? entry.intersectionRatio : 0);
+            }
+            pickBest();
+        },
+        {
+            // Treat the section as "active" when it's around the viewport middle.
+            root: null,
+            rootMargin: '-35% 0px -55% 0px',
+            threshold: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1]
+        }
+    );
+
+    for (const section of idToSection.values()) {
+        spyObserver.observe(section);
+    }
+
+    // If the user clicks a link, reflect it immediately (scrollspy will follow).
+    links.forEach((a) => {
+        a.addEventListener('click', () => {
+            const href = a.getAttribute('href') || '';
+            if (!href.startsWith('#')) return;
+            const id = href.slice(1);
+            if (idToSection.has(id)) setActive(id);
+        });
+    });
+}
+
+// Run again on full load (external scripts like Leaflet CDN are guaranteed loaded here)
+window.addEventListener('load', () => {
+    initServiceMap();
+    setupHeroTyping(document.documentElement.lang || 'en');
+});
+
+// Make sure typing updates even if the map isn't initialized (event is fired from translations.js)
+document.addEventListener('languageChanged', (e) => {
+    const newLang = e.detail?.lang || document.documentElement.lang || 'en';
+    setupHeroTyping(newLang);
+});
+
+// --- Hero typing effect (EN/FR) ---
+let typingTimer = null;
+let typingState = null;
+
+function stopHeroTyping() {
+    if (typingTimer) {
+        clearTimeout(typingTimer);
+        typingTimer = null;
+    }
+    typingState = null;
+}
+
+function setupHeroTyping(lang) {
+    const heroTitleEl = document.getElementById('heroTitle') || document.querySelector('.hero-title');
+    if (!heroTitleEl) return;
+
+    const data = (typeof translations !== 'undefined')
+        ? (translations[lang] || translations.en)
+        : null;
+
+    const baseWord = data?.heroTypingBase || (lang === 'fr' ? 'Livraison ' : 'Delivery');
+    const words = data?.heroTypingWords || (lang === 'fr'
+        ? ['Rapide', 'Fiable', 'Professionelle', 'Durable']
+        : ['Fast', 'Reliable', 'Professional', 'Eco-friendly']);
+
+    // Build the DOM structure
+    stopHeroTyping();
+    if (lang === 'en') {
+        // e.g. "Fast Delivery"
+        heroTitleEl.innerHTML = `<span class="typing-word" id="typingWord" aria-live="polite"></span><span> ${baseWord}</span>`;
+    } else {
+        // e.g. "Livraison Rapide"
+        heroTitleEl.innerHTML = `${baseWord}<span class="typing-word" id="typingWord" aria-live="polite"></span>`;
+    }
+
+    const wordEl = document.getElementById('typingWord');
+    if (!wordEl) return;
+
+    typingState = {
+        idx: 0,
+        char: 0,
+        deleting: false
+    };
+
+    const typeSpeed = 140;
+    const deleteSpeed = 90;
+    const pauseAfterType = 1600;
+    const pauseAfterDelete = 450;
+
+    const tick = () => {
+        if (!typingState) return;
+
+        const current = words[typingState.idx];
+
+        if (!typingState.deleting) {
+            typingState.char += 1;
+            wordEl.textContent = current.slice(0, typingState.char);
+            if (typingState.char >= current.length) {
+                typingState.deleting = true;
+                typingTimer = setTimeout(tick, pauseAfterType);
+                return;
+            }
+            typingTimer = setTimeout(tick, typeSpeed);
+            return;
+        }
+
+        // deleting
+        typingState.char -= 1;
+        wordEl.textContent = current.slice(0, Math.max(0, typingState.char));
+        if (typingState.char <= 0) {
+            typingState.deleting = false;
+            typingState.idx = (typingState.idx + 1) % words.length;
+            typingTimer = setTimeout(tick, pauseAfterDelete);
+            return;
+        }
+        typingTimer = setTimeout(tick, deleteSpeed);
+    };
+
+    tick();
+}
+
+function initServiceMap() {
+    const mapEl = document.getElementById('serviceMap');
+    if (!mapEl) return;
+
+    const getLangData = () => {
+        const lang = document.documentElement.lang || 'en';
+        // translations is defined in translations.js (loaded before script.js)
+        if (typeof translations === 'undefined') return { lang };
+        return { lang, data: translations[lang] || translations.en };
+    };
+
+    const renderFallback = () => {
+        const { data } = getLangData();
+        const msg = data?.mapFallback || 'Map failed to load.';
+        mapEl.classList.add('map-fallback');
+        mapEl.innerHTML = `<div>${msg}</div>`;
+    };
+
+    // Leaflet must be available (loaded via CDN in index.html)
+    if (typeof L === 'undefined') {
+        renderFallback();
+        return;
+    }
+
+    // Prevent double-initialization (we call init on DOMContentLoaded and window.load)
+    if (mapEl.dataset.mapInitialized === 'true') return;
+
+    // Ensure Leaflet gets a normal container (fallback uses flex and breaks Leaflet layout)
+    mapEl.classList.remove('map-fallback');
+    mapEl.innerHTML = '';
+
+    let map;
+    try {
+        map = L.map(mapEl, {
+            scrollWheelZoom: false,
+            dragging: true,
+            tap: false,
+            zoomControl: true,
+            // Prevent "infinite duplicate worlds" when panning left/right.
+            // Without this, tiles wrap but markers don't, so pins appear to disappear.
+            worldCopyJump: true
+        });
+    } catch (e) {
+        renderFallback();
+        return;
+    }
+
+    // Expose for reveal observer to invalidate size when it fades in
+    window.__serviceMap = map;
+
+    // Keep required tile/provider attribution, but remove Leaflet "watermark" prefix
+    // and move attribution to bottom-left to be less intrusive.
+    try {
+        map.attributionControl.setPrefix('');
+        map.attributionControl.setPosition('bottomleft');
+    } catch (_) {
+        // ignore
+    }
+
+    // Zoom controls (plus/minus) for better navigation
+    try {
+        map.zoomControl.setPosition('topright');
+    } catch (_) {
+        // ignore
+    }
+
+    // Try multiple tile providers (some networks block specific domains)
+    const tileProviders = [
+        {
+            url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+            options: { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors & CARTO' }
+        },
+        {
+            url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            options: { maxZoom: 18, attribution: '&copy; OpenStreetMap contributors' }
+        },
+        {
+            url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+            options: { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors & CARTO' }
+        },
+        {
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+            options: { maxZoom: 19, attribution: '&copy; Esri' }
+        }
+    ];
+
+    function addTileLayerWithFallback(providerIndex = 0) {
+        const provider = tileProviders[providerIndex];
+        if (!provider) {
+            map.remove();
+            renderFallback();
+            return;
+        }
+
+        let tilesLoaded = false;
+        let tileErrors = 0;
+
+        const layer = L.tileLayer(provider.url, provider.options).addTo(map);
+
+        layer.on('load', () => {
+            tilesLoaded = true;
+        });
+
+        layer.on('tileerror', () => {
+            tileErrors += 1;
+        });
+
+        // If no tiles load shortly after init, try the next provider
+        setTimeout(() => {
+            if (!tilesLoaded && tileErrors > 0) {
+                try {
+                    map.removeLayer(layer);
+                } catch (_) {
+                    // ignore
+                }
+                addTileLayerWithFallback(providerIndex + 1);
+            }
+        }, 2500);
+    }
+
+    addTileLayerWithFallback(0);
+
+    // Ensure marker icons load even if Leaflet can't auto-detect image paths
+    try {
+        delete L.Icon.Default.prototype._getIconUrl;
+        L.Icon.Default.mergeOptions({
+            iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
+        });
+    } catch (_) {
+        // ignore
+    }
+
+    const cities = {
+        quebec: { lat: 46.8139, lng: -71.2080 },
+        montreal: { lat: 45.5017, lng: -73.5673 },
+        ottawa: { lat: 45.4215, lng: -75.6972 },
+        amsterdam: { lat: 52.3676, lng: 4.9041 },
+        rotterdam: { lat: 51.9244, lng: 4.4777 },
+        losangeles: { lat: 34.0522, lng: -118.2437 },
+        malaga: { lat: 36.7213, lng: -4.4214 },
+        bordeaux: { lat: 44.8378, lng: -0.5792 }
+    };
+
+    const cityImages = {
+        quebec: [
+            'assets/public/placeholders/quebec-1.svg',
+            'assets/public/placeholders/quebec-2.svg',
+            'assets/public/placeholders/quebec-3.svg'
+        ],
+        montreal: [
+            'assets/public/placeholders/montreal-1.svg',
+            'assets/public/placeholders/montreal-2.svg',
+            'assets/public/placeholders/montreal-3.svg'
+        ],
+        ottawa: [
+            'assets/public/placeholders/ottawa-1.svg',
+            'assets/public/placeholders/ottawa-2.svg',
+            'assets/public/placeholders/ottawa-3.svg'
+        ],
+        amsterdam: [
+            'assets/public/placeholders/amsterdam-1.svg',
+            'assets/public/placeholders/amsterdam-2.svg',
+            'assets/public/placeholders/amsterdam-3.svg'
+        ],
+        rotterdam: [
+            'assets/public/placeholders/rotterdam-1.svg',
+            'assets/public/placeholders/rotterdam-2.svg',
+            'assets/public/placeholders/rotterdam-3.svg'
+        ]
+    };
+
+    // Custom green marker icon (matches --primary-color)
+    const greenMarkerIcon = L.divIcon({
+        className: 'ka-marker',
+        html: `
+            <svg width="34" height="46" viewBox="0 0 34 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path d="M17 0C7.6 0 0 7.6 0 17c0 11.8 17 29 17 29s17-17.2 17-29C34 7.6 26.4 0 17 0z" fill="#79dd2b"/>
+                <circle cx="17" cy="17" r="6.5" fill="#1f3040"/>
+                <circle cx="17" cy="17" r="3.2" fill="#ffffff" opacity="0.9"/>
+            </svg>
+        `,
+        iconSize: [34, 46],
+        iconAnchor: [17, 45],
+        popupAnchor: [0, -42]
+    });
+
+    // Light blue "fade" marker icon (for Coming Soon cities)
+    const lightBlueMarkerIcon = L.divIcon({
+        className: 'ka-marker',
+        html: `
+            <svg width="34" height="46" viewBox="0 0 34 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path d="M17 0C7.6 0 0 7.6 0 17c0 11.8 17 29 17 29s17-17.2 17-29C34 7.6 26.4 0 17 0z" fill="#8ecffb" opacity="0.7"/>
+                <circle cx="17" cy="17" r="6.5" fill="#1f3040"/>
+                <circle cx="17" cy="17" r="3.2" fill="#ffffff" opacity="0.9"/>
+            </svg>
+        `,
+        iconSize: [34, 46],
+        iconAnchor: [17, 45],
+        popupAnchor: [0, -42]
+    });
+
+    const mk = (c) => L.marker([c.lat, c.lng], { icon: greenMarkerIcon }).addTo(map);
+    const mkBlue = (c) => L.marker([c.lat, c.lng], { icon: lightBlueMarkerIcon }).addTo(map);
+
+    const markers = {
+        quebec: mk(cities.quebec),
+        montreal: mk(cities.montreal),
+        ottawa: mk(cities.ottawa),
+        amsterdam: mk(cities.amsterdam),
+        rotterdam: mk(cities.rotterdam),
+        losangeles: mkBlue(cities.losangeles),
+        malaga: mkBlue(cities.malaga),
+        bordeaux: mkBlue(cities.bordeaux)
+    };
+
+    const bounds = L.latLngBounds([
+        [cities.quebec.lat, cities.quebec.lng],
+        [cities.montreal.lat, cities.montreal.lng],
+        [cities.ottawa.lat, cities.ottawa.lng],
+        [cities.amsterdam.lat, cities.amsterdam.lng],
+        [cities.rotterdam.lat, cities.rotterdam.lng],
+        [cities.losangeles.lat, cities.losangeles.lng],
+        [cities.malaga.lat, cities.malaga.lng],
+        [cities.bordeaux.lat, cities.bordeaux.lng]
+    ]);
+    map.fitBounds(bounds, { padding: [40, 40] });
+    // Keep panning within a reasonable envelope (still allows some exploration),
+    // and avoids drifting into wrapped copies where markers seem to "vanish".
+    try {
+        map.setMaxBounds(bounds.pad(0.6));
+        map.options.maxBoundsViscosity = 0.85;
+    } catch (_) {
+        // ignore
+    }
+    setTimeout(() => map.invalidateSize(), 150);
+
+    function buildComingSoonPopup(title, label = 'COMING SOON') {
+        return `
+            <div class="map-popup">
+                <div class="map-popup-title"><strong>${title}</strong></div>
+                <div class="map-popup-sub">${label}</div>
+            </div>
+        `;
+    }
+
+    function buildCarousel(cityKey, title, serviceText) {
+        const imgs = cityImages[cityKey] || [];
+        const slides = imgs
+            .map((src, idx) => `<img class="carousel-slide${idx === 0 ? ' is-active' : ''}" src="${src}" alt="${title} ${idx + 1}" loading="lazy">`)
+            .join('');
+
+        const dots = imgs
+            .map((_, idx) => `<button class="carousel-dot${idx === 0 ? ' is-active' : ''}" type="button" data-index="${idx}" aria-label="Slide ${idx + 1}"></button>`)
+            .join('');
+
+        return `
+            <div class="map-popup">
+                <div class="map-popup-title"><strong>${title}</strong></div>
+                <div class="map-popup-sub">${serviceText}</div>
+                <div class="popup-carousel" data-city="${cityKey}" data-index="0">
+                    <button class="carousel-btn prev" type="button" data-action="prev" aria-label="Previous">‹</button>
+                    <button class="carousel-btn next" type="button" data-action="next" aria-label="Next">›</button>
+                    <div class="carousel-slides">${slides}</div>
+                    <div class="carousel-dots">${dots}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function updateMapLabels(lang) {
+        if (typeof translations === 'undefined') return;
+        const data = translations[lang] || translations.en;
+        const serviceText = data.mapServiceAvailable || '';
+
+        markers.quebec.bindPopup(buildCarousel('quebec', data.mapCityQuebec || 'Quebec City', serviceText), { className: 'map-popup-wrap' });
+        markers.montreal.bindPopup(buildCarousel('montreal', data.mapCityMontreal || 'Montreal', serviceText), { className: 'map-popup-wrap' });
+        markers.ottawa.bindPopup(buildCarousel('ottawa', data.mapCityOttawa || 'Ottawa', serviceText), { className: 'map-popup-wrap' });
+        markers.amsterdam.bindPopup(buildCarousel('amsterdam', data.mapCityAmsterdam || 'Amsterdam', serviceText), { className: 'map-popup-wrap' });
+        markers.rotterdam.bindPopup(buildCarousel('rotterdam', data.mapCityRotterdam || 'Rotterdam', serviceText), { className: 'map-popup-wrap' });
+        markers.losangeles.bindPopup(buildComingSoonPopup('Los Angeles', 'COMING SOON'), { className: 'map-popup-wrap' });
+        markers.malaga.bindPopup(buildComingSoonPopup('Malaga, Spain', 'COMING SOON'), { className: 'map-popup-wrap' });
+        markers.bordeaux.bindPopup(buildComingSoonPopup('Bordeaux, France', 'COMING SOON'), { className: 'map-popup-wrap' });
+    }
+
+    updateMapLabels(document.documentElement.lang || 'en');
+
+    document.addEventListener('languageChanged', (e) => {
+        const newLang = e.detail?.lang || document.documentElement.lang || 'en';
+        updateMapLabels(newLang);
+        setupHeroTyping(newLang);
+    });
+
+    window.addEventListener('resize', () => {
+        map.invalidateSize();
+    });
+
+    map.on('popupopen', (e) => {
+        const container = e.popup.getElement();
+        if (!container) return;
+        const carousel = container.querySelector('.popup-carousel');
+        if (!carousel) return;
+
+        const slides = Array.from(carousel.querySelectorAll('.carousel-slide'));
+        const dots = Array.from(carousel.querySelectorAll('.carousel-dot'));
+        if (slides.length === 0) return;
+
+        const setIndex = (newIndex) => {
+            const max = slides.length;
+            const idx = (newIndex + max) % max;
+            carousel.dataset.index = String(idx);
+            slides.forEach((el, i) => el.classList.toggle('is-active', i === idx));
+            dots.forEach((el, i) => el.classList.toggle('is-active', i === idx));
+        };
+
+        const onClick = (ev) => {
+            const btn = ev.target.closest('button');
+            if (!btn) return;
+            if (btn.classList.contains('carousel-btn')) {
+                const dir = btn.dataset.action;
+                const current = Number(carousel.dataset.index || '0');
+                setIndex(dir === 'next' ? current + 1 : current - 1);
+            }
+            if (btn.classList.contains('carousel-dot')) {
+                const idx = Number(btn.dataset.index || '0');
+                setIndex(idx);
+            }
+        };
+
+        // Avoid duplicate binding when opening/closing
+        if (carousel.dataset.bound === 'true') return;
+        carousel.addEventListener('click', onClick);
+        carousel.dataset.bound = 'true';
+        setIndex(Number(carousel.dataset.index || '0'));
+    });
+
+    mapEl.dataset.mapInitialized = 'true';
+}
+
+    </script>
 </body>
 </html>
 
