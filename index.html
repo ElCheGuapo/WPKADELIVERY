@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KA Delivery - Fast & Reliable Delivery Services Across Canada</title>
+    <meta name="description" content="KA Delivery provides fast, reliable, and affordable delivery services across Canada. Trusted by businesses and individuals nationwide.">
+    <script>
+        (function () {
+            try {
+                const stored = localStorage.getItem('theme');
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const theme = stored || (prefersDark ? 'dark' : 'light');
+                document.documentElement.dataset.theme = theme;
+            } catch (_) {}
+        })();
+    </script>
+    <link rel="icon" href="assets/public/k.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="#home">
+                        <img
+                            src="assets/public/ka-delivery-navbar.svg"
+                            data-src-light="assets/public/ka-delivery-navbar.svg"
+                            data-src-dark="assets/public/logo-navbar-dark.svg"
+                            alt="KA Delivery Logo"
+                            class="logo-img"
+                            id="navbarLogo"
+                        >
+                    </a>
+                </div>
+                <div class="nav-right">
+                    <button class="menu-toggle" aria-label="Toggle menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <ul class="nav-menu">
+                        <li><a href="#home" class="nav-link" data-translate="navHome">Home</a></li>
+                        <li><a href="#services" class="nav-link" data-translate="navServices">Services</a></li>
+                        <li><a href="#about" class="nav-link" data-translate="navAbout">About</a></li>
+                        <li><a href="#contact" class="nav-link" data-translate="navContact">Contact</a></li>
+                    </ul>
+                    <button class="lang-toggle" id="langToggle" aria-label="Toggle language">
+                        <span id="currentLang">EN</span>
+                    </button>
+                    <button
+                        class="theme-toggle"
+                        id="themeToggle"
+                        type="button"
+                        role="switch"
+                        aria-checked="false"
+                        aria-label="Toggle dark mode"
+                        title="Dark mode"
+                    >
+                        <span class="theme-toggle-track" aria-hidden="true">
+                            <span class="theme-toggle-thumb"></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <video class="hero-video" autoplay muted loop playsinline preload="metadata">
+            <source
+                id="heroVideoSource"
+                src="assets/public/video/truck-render-night.webm"
+                data-src-light="assets/public/video/truck-render-day.webm"
+                data-src-dark="assets/public/video/truck-render-night.webm"
+                type="video/webm"
+            >
+        </video>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title" id="heroTitle">Delivery</h1>
+                <p class="hero-subtitle" data-translate="heroSubtitle">Your trusted partner for seamless logistics and timely deliveries. Serving businesses and individuals from coast to coast.</p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn btn-primary" data-translate="btnGetQuote">Get a Quote</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-overlay"></div>
+    </section>
+
+    <!-- Scroll Message Section -->
+    <section class="scroll-message" id="home-message" aria-label="KA Delivery message">
+        <div class="container">
+            <div class="scroll-message-lines" data-scroll-lines>
+                <div class="scroll-message-line" data-direction="right" data-translate="homeScrollLine1">Livrer c'est bien.</div>
+                <div class="scroll-message-line" data-direction="left" data-translate="homeScrollLine2">Connecter c'est mieux.</div>
+                <div class="scroll-message-line" data-direction="right" data-translate="homeScrollLine3">Chez KA Delivery, on fait les deux</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title" data-translate="servicesTitle">Our Services</h2>
+            <p class="section-subtitle" data-translate="servicesSubtitle">Comprehensive delivery solutions tailored to your needs</p>
+            <div class="services-grid">
+                <a class="service-card service-link" href="service-cle-en-mains.html">
+                    <div class="service-icon">
+                        <img
+                            class="service-icon-img"
+                            src="assets/public/images/ka-logo-1.svg"
+                            data-src-light="assets/public/images/ka-logo-1.svg"
+                            data-src-dark="assets/public/images/ka-logo-1-white.svg"
+                            alt="Service Clé en Mains icon"
+                        >
+                    </div>
+                    <h3 data-translate="service1Title">Service Clé en Mains</h3>
+                    <p data-translate="service1Desc">Gestion complète de vos livraisons, de A à Z.</p>
+                </a>
+                <a class="service-card service-link" href="service-solutions-entreprises.html">
+                    <div class="service-icon">
+                        <img
+                            class="service-icon-img"
+                            src="assets/public/images/ka-logo-2.svg"
+                            data-src-light="assets/public/images/ka-logo-2.svg"
+                            data-src-dark="assets/public/images/ka-logo-2-white.svg"
+                            alt="Solutions D'Entreprises icon"
+                        >
+                    </div>
+                    <h3 data-translate="service2Title">Solutions D'Entreprises</h3>
+                    <p data-translate="service2Desc">Solutions logistiques sur mesure pour votre entreprise.</p>
+                </a>
+                <a class="service-card service-link" href="service-sous-traitance.html">
+                    <div class="service-icon">
+                        <img
+                            class="service-icon-img"
+                            src="assets/public/images/ka-logo-3.svg"
+                            data-src-light="assets/public/images/ka-logo-3.svg"
+                            data-src-dark="assets/public/images/ka-logo-3-white.svg"
+                            alt="Sous-Traitance icon"
+                        >
+                    </div>
+                    <h3 data-translate="service3Title">Sous-Traitance</h3>
+                    <p data-translate="service3Desc">Sous-traitance fiable pour compléter vos opérations de livraison.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Areas Map -->
+    <section id="service-areas" class="map-section">
+        <div class="container">
+            <h2 class="section-title" data-translate="mapTitle">Service Areas</h2>
+            <p class="section-subtitle" data-translate="mapSubtitle">Là où vos clients sont, nous livrons.</p>
+            <div class="map-container">
+                <div id="serviceMap" role="region" aria-label="Service area map"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Values -->
+    <section id="mission-valeurs" class="mission-values">
+        <div class="container">
+            <h2 class="section-title" data-translate="missionValuesTitle">Mission &amp; Valeurs</h2>
+            <div class="mv-split" data-mv>
+                <div class="mv-image">
+                    <img
+                        class="mv-image-img"
+                        src="assets/public/images/mission.jpg"
+                        data-src-mission="assets/public/images/mission.jpg"
+                        data-src-values="assets/public/images/values.jpg"
+                        data-fallback-mission="assets/public/images/ServiceCle.png"
+                        data-fallback-values="assets/public/images/SousTraitence.png"
+                        alt=""
+                        loading="lazy"
+                    >
+                </div>
+
+                <div class="mv-card">
+                    <div class="mv-tabs" role="tablist" aria-label="Mission & Valeurs">
+                        <button class="mv-tab is-active" type="button" role="tab" aria-selected="true" data-mv-tab="mission">
+                            <span data-translate="missionTitle">Mission</span>
+                        </button>
+                        <button class="mv-tab" type="button" role="tab" aria-selected="false" data-mv-tab="values">
+                            <span data-translate="valuesTitle">Valeurs</span>
+                        </button>
+                    </div>
+
+                    <div class="mv-panels">
+                        <div class="mv-panel is-active" role="tabpanel" data-mv-panel="mission">
+                            <div class="mv-body" data-translate="missionBody">
+                                Offrir une livraison fiable et cohérente, pensée comme une extension de l’expérience client, afin d’aider les entreprises à protéger leur image jusqu’à la porte du client.
+                            </div>
+                        </div>
+
+                        <div class="mv-panel" role="tabpanel" data-mv-panel="values" hidden>
+                            <div class="mv-body" data-translate="valuesBody">
+                                <div class="values-grid">
+                                    <div class="value">
+                                        <div class="value-title">Fiabilité</div>
+                                        <div class="value-text">Tenir nos engagements, respecter les délais et assurer une exécution constante, chaque jour.</div>
+                                    </div>
+                                    <div class="value">
+                                        <div class="value-title">Exigence</div>
+                                        <div class="value-text">Appliquer les mêmes standards de qualité<br>à chaque livraison, peu importe le volume ou le contexte.</div>
+                                    </div>
+                                    <div class="value">
+                                        <div class="value-title">Responsabilité</div>
+                                        <div class="value-text">Opérer de manière consciente, avec une flotte 100 % électrique,<br>et des pratiques adaptées aux réalités urbaines.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title" data-translate="aboutTitle">About KA Delivery</h2>
+                    <p data-translate="aboutP1">
+                        KA Delivery est une entreprise de livraison spécialisée dans la livraison du dernier kilomètre, qui accompagne les entreprises, marques et acteurs logistiques dans leurs opérations de livraison.
+                    </p>
+                    <p data-translate="aboutP2">
+                        Nous intervenons à la fois comme partenaire de sous-traitance pour des entreprises de logistique établies, et comme solution de livraison clé en main pour des PME et marques en croissance.
+                    </p>
+                    <p data-translate="aboutP3">
+                        <strong>Notre approche est simple :</strong><br>
+                        <strong>La livraison est la dernière impression que votre client garde de vous.</strong>
+                    </p>
+                    <p data-translate="aboutP4">
+                        C’est pourquoi nous misons sur la fiabilité, le respect des délais et une exécution constante, peu importe le volume.
+                    </p>
+                    <p data-translate="aboutP5">
+                        <strong>Dans une démarche responsable,</strong><br>
+                        KA Delivery opère avec une flotte 100 % électrique.
+                    </p>
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <strong>2500+</strong>
+                            <span data-translate="feature1Label">Daily Deliveries</span>
+                        </div>
+                        <div class="feature-item">
+                            <strong>99.6%</strong>
+                            <span data-translate="feature3Label">On-Time Rate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pre-contact Scroll Message -->
+    <section class="scroll-message scroll-message--right scroll-message--subtle" id="pre-contact-message" aria-label="Pre-contact message">
+        <div class="container">
+            <div class="scroll-message-lines" data-scroll-lines data-shift-mult="0.35">
+                <div class="scroll-message-line" data-direction="right" data-translate="preContactLine1">Chaque livraison mérite la même attention.</div>
+                <div class="scroll-message-line" data-direction="left" data-translate="preContactLine2">Peu importe le volume ou le contexte.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title" data-translate="contactTitle">Get In Touch</h2>
+            <div class="contact-wrapper">
+                <div class="contact-cta">
+                    <div class="contact-cta-left">
+                        <p class="contact-cta-title" data-translate="contactCtaTitle">Prêt à livrer à la hauteur de votre image ?</p>
+                        <p class="contact-cta-text" data-translate="contactCtaText">Parlons de vos besoins et voyons comment KA Delivery peut vous accompagner.</p>
+                    </div>
+                    <div class="contact-cta-right">
+                    <a class="btn btn-primary" href="mailto:ka.delivery@mail.com" data-translate="contactCtaButton" aria-label="Email ka.delivery@mail.com">Contactez Nous</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="assets/public/logo-light.svg" alt="KA Delivery Logo" class="footer-logo">
+                    <p data-translate="footerTagline">Your trusted delivery partner across Canada</p>
+                    <div class="footer-socials" aria-label="Social links">
+                        <a
+                            class="footer-social-link"
+                            href="https://www.linkedin.com/company/ka-delivery"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="KA Delivery on LinkedIn (opens in a new tab)"
+                        >
+                            <svg viewBox="0 0 382 382" width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false">
+                                <path d="M347.445,0H34.555C15.471,0,0,15.471,0,34.555v312.889C0,366.529,15.471,382,34.555,382h312.889C366.529,382,382,366.529,382,347.444V34.555C382,15.471,366.529,0,347.445,0z M118.207,329.844c0,5.554-4.502,10.056-10.056,10.056H65.345c-5.554,0-10.056-4.502-10.056-10.056V150.403c0-5.554,4.502-10.056,10.056-10.056h42.806c5.554,0,10.056,4.502,10.056,10.056V329.844z M86.748,123.432c-22.459,0-40.666-18.207-40.666-40.666S64.289,42.1,86.748,42.1s40.666,18.207,40.666,40.666S109.208,123.432,86.748,123.432z M341.91,330.654c0,5.106-4.14,9.246-9.246,9.246H286.73c-5.106,0-9.246-4.14-9.246-9.246v-84.168c0-12.556,3.683-55.021-32.813-55.021c-28.309,0-34.051,29.066-35.204,42.11v97.079c0,5.106-4.139,9.246-9.246,9.246h-44.426c-5.106,0-9.246-4.14-9.246-9.246V149.593c0-5.106,4.14-9.246,9.246-9.246h44.426c5.106,0,9.246,4.14,9.246,9.246v15.655c10.497-15.753,26.097-27.912,59.312-27.912c73.552,0,73.131,68.716,73.131,106.472L341.91,330.654L341.91,330.654z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section footer-contact">
+                    <h4 data-translate="navContact">Contact</h4>
+                    <ul class="footer-contact-list">
+                        <li>
+                            <span>1200 McGill College Avenue #1100, Montreal, QC H3B 4G7</span>
+                        </li>
+                        <li>
+                            <a href="mailto:ka.delivery@mail.com" aria-label="Email ka.delivery@mail.com">
+                                ka.delivery@mail.com
+                            </a>
+                        </li>
+                        <li>
+                            <span data-translate="contactHoursText">Monday - Friday: 8:00 AM - 6:00 PM<br>Saturday: 9:00 AM - 4:00 PM<br>Sunday: Closed</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 data-translate="footerQuickLinks">Quick Links</h4>
+                    <ul>
+                        <li><a href="#home" data-translate="navHome">Home</a></li>
+                        <li><a href="#services" data-translate="navServices">Services</a></li>
+                        <li><a href="#about" data-translate="navAbout">About</a></li>
+                        <li><a href="#contact" data-translate="navContact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 data-translate="footerServices">Services</h4>
+                    <ul>
+                        <li><a href="#services" data-translate="footerPackageDelivery">Service Clé en Mains</a></li>
+                        <li><a href="#services" data-translate="footerBusinessSolutions">Solutions D'Entreprises</a></li>
+                        <li><a href="#services" data-translate="footerSameDayDelivery">Sous-Traitance</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p data-translate="footerCopyright">&copy; 2024 KA Delivery. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="translations.js?v=20260203_05"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
