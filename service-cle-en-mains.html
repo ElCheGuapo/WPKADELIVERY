@@ -119,6 +119,101 @@ body {
     box-shadow: var(--shadow);
 }
 
+.lang-dropdown {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.lang-dropdown-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 0.9rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    line-height: 1.1;
+    min-width: 150px;
+    justify-content: space-between;
+    transition: background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.lang-dropdown-toggle:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+.lang-dropdown-toggle:focus-visible {
+    outline: 3px solid rgba(121, 221, 43, 0.45);
+    outline-offset: 3px;
+}
+
+.lang-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    min-width: 220px;
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    box-shadow: var(--shadow-lg);
+    padding: 0.35rem 0.25rem;
+    z-index: 1200;
+    display: none;
+    transform-origin: top right;
+}
+
+.lang-dropdown.open .lang-dropdown-menu {
+    display: block;
+}
+
+.lang-dropdown-item {
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.65rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 140ms ease, color 140ms ease;
+}
+
+/* Subtle hover background + green underline like navbar links */
+.lang-dropdown-item:hover {
+    background: rgba(121, 221, 43, 0.10);
+    color: var(--primary-color);
+}
+
+.lang-dropdown-item::after {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    bottom: 10px;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width 0.25s ease;
+}
+
+.lang-dropdown-item:hover::after,
+.lang-dropdown-item.is-active::after {
+    width: calc(100% - 2rem);
+}
+
+.lang-dropdown-item.is-active {
+    color: var(--primary-color);
+}
+
 .theme-toggle {
     background: none;
     border: none;
@@ -1434,6 +1529,16 @@ section {
         min-width: 40px;
     }
 
+    .lang-dropdown-toggle {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.85rem;
+        min-width: 148px;
+    }
+
+    .lang-dropdown-menu {
+        min-width: 200px;
+    }
+
     .nav-menu {
         position: fixed;
         left: -100%;
@@ -1553,9 +1658,25 @@ section {
                         <li><a href="index.html#about" class="nav-link" data-translate="navAbout">About</a></li>
                         <li><a href="index.html#contact" class="nav-link" data-translate="navContact">Contact</a></li>
                     </ul>
-                    <button class="lang-toggle" id="langToggle" aria-label="Toggle language">
-                        <span id="currentLang">EN</span>
-                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button
+                            class="lang-dropdown-toggle"
+                            id="langDropdownToggle"
+                            type="button"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            aria-label="Select language"
+                        >
+                            <span id="currentLangLabel">English</span>
+                            <span class="lang-dropdown-caret" aria-hidden="true">▾</span>
+                        </button>
+                        <div class="lang-dropdown-menu" id="langDropdownMenu" role="menu" aria-label="Language menu">
+                            <button type="button" class="lang-dropdown-item" data-lang="en" role="menuitem">English</button>
+                            <button type="button" class="lang-dropdown-item" data-lang="fr" role="menuitem">Français</button>
+                            <button type="button" class="lang-dropdown-item" data-lang="es" role="menuitem">Español</button>
+                            <button type="button" class="lang-dropdown-item" data-lang="nl" role="menuitem">Nederlands</button>
+                        </div>
+                    </div>
                     <button
                         class="theme-toggle"
                         id="themeToggle"
@@ -1974,19 +2095,335 @@ const translations = {
         mapCityRotterdam: "Rotterdam",
         mapServiceAvailable: "Service disponible",
         mapFallback: "Impossible de charger la carte. Veuillez vérifier votre connexion internet."
+    },
+    es: {
+        navHome: "Inicio",
+        navServices: "Servicios",
+        navAbout: "Quiénes somos",
+        navContact: "Contacto",
+        heroTitle: "Entrega rápida y fiable en todo Canadá",
+        heroTypingBase: "Entrega",
+        heroTypingWords: ["Rápida", "Fiable", "Profesional", "Ecológica"],
+        heroSubtitle: "La entrega, diseñada como una extensión de tu marca.",
+        btnGetQuote: "Solicitar presupuesto",
+        btnOurServices: "Nuestros servicios",
+        servicesTitle: "Nuestros servicios",
+        servicesSubtitle: "Soluciones de entrega pensadas para las empresas de hoy.",
+        service1Title: "Servicio llave en mano",
+        service1Desc: "De la recogida a la puerta del cliente, gestionamos cada entrega con rigor, claridad y el mismo nivel de cuidado, sin importar el volumen.",
+        service1Body: `
+            <p>KA Delivery se encarga de todas tus entregas, desde la recogida hasta la puerta del cliente.</p>
+            <p>Este servicio está diseñado para empresas que desean delegar la entrega manteniendo fiabilidad, claridad y consistencia.</p>
+
+            <h3>Qué gestionamos por ti</h3>
+            <ul>
+                <li>Coordinación integral de las entregas</li>
+                <li>Gestión de volúmenes, sin importar el tamaño</li>
+                <li>Seguimiento claro y comunicación fluida</li>
+                <li>Un único punto de contacto</li>
+            </ul>
+
+            <h3>Una solución que se adapta a tu realidad</h3>
+            <p>Tanto si tus necesidades son puntuales como recurrentes, adaptamos nuestra organización para asegurar una ejecución fiable y constante.</p>
+
+            <h3>¿Para quién es?</h3>
+            <ul>
+                <li>Pymes y marcas en crecimiento</li>
+                <li>Empresas que quieren externalizar su entrega</li>
+                <li>Organizaciones que buscan una solución simple y estructurada</li>
+            </ul>
+        `,
+        service2Title: "Soluciones para empresas",
+        service2Desc: "Apoyo operativo cuando necesitas entregar un paquete, un pedido o un volumen específico, sin movilizar recursos internos.",
+        service2Body: `
+            <p>KA Delivery ofrece apoyo operativo cuando necesitas entregar un paquete, un pedido o un volumen específico, sin movilizar recursos internos.</p>
+            <p>Este servicio está pensado para empresas que ya realizan entregas, pero necesitan apoyo rápido y flexible.</p>
+
+            <h3>Qué hacemos</h3>
+            <ul>
+                <li>Entrega puntual de punto A a punto B</li>
+                <li>Entregas urgentes o de última hora</li>
+                <li>Transporte de paquetes individuales</li>
+                <li>Apoyo temporal para tus operaciones</li>
+            </ul>
+
+            <h3>¿Para quién es?</h3>
+            <ul>
+                <li>Minoristas</li>
+                <li>Empresas con entregas ocasionales</li>
+                <li>Necesidades urgentes o imprevistas</li>
+            </ul>
+        `,
+        service3Title: "Subcontratación",
+        service3Desc: "KA Delivery apoya a empresas logísticas como socio de subcontratación en terreno, diseñado para reforzar las operaciones diarias.",
+        service3Body: `
+            <p>KA Delivery apoya a empresas logísticas como socio de subcontratación en terreno, para reforzar tu operación diaria.</p>
+            <p>Intervenimos para aumentar tu capacidad, absorber volumen y cumplir tus estándares.</p>
+
+            <h3>Socios operativos</h3>
+            <p>KA Delivery colabora con redes reconocidas —incluyendo Nationex, Intelcom y Obibox— para garantizar operaciones fiables y alineadas con los estándares esperados.</p>
+
+            <h3>Qué asumimos</h3>
+            <ul>
+                <li>Refuerzo operativo en terreno</li>
+                <li>Gestión de volumen puntual o recurrente</li>
+                <li>Rutas dedicadas o misiones específicas</li>
+                <li>Puntualidad y cumplimiento de procesos</li>
+            </ul>
+
+            <h3>Integración sencilla</h3>
+            <p>Nuestros equipos se integran rápidamente en tus procesos existentes para asegurar una ejecución fluida y fiable.</p>
+
+            <h3>¿Para quién es?</h3>
+            <ul>
+                <li>Empresas de logística y distribución</li>
+                <li>Organizaciones con picos de volumen</li>
+                <li>Equipos que necesitan capacidad adicional en terreno</li>
+            </ul>
+        `,
+        aboutTitle: "Sobre KA Delivery",
+        aboutP1: "KA Delivery es una empresa de entrega de última milla que apoya a empresas, marcas y operadores logísticos en sus operaciones de entrega.",
+        aboutP2: "Actuamos tanto como socio de subcontratación para empresas logísticas establecidas como solución llave en mano para pymes y marcas en crecimiento.",
+        aboutP3: "<strong>Nuestro enfoque es simple:</strong><br><strong>La entrega es la última impresión que tu cliente tiene de ti.</strong>",
+        aboutP4: "Por eso nos enfocamos en la fiabilidad, el cumplimiento de plazos y una ejecución constante, sin importar el volumen.",
+        aboutP5: "<strong>Como parte de un enfoque responsable,</strong><br>KA Delivery opera con una flota 100% eléctrica.",
+        feature1Label: "Entregas diarias",
+        feature2Label: "Países atendidos",
+        feature3Label: "Tasa de puntualidad",
+        contactTitle: "Contacta con nosotros",
+        contactCtaTitle: "¿Listo para entregar a la altura de tu imagen?",
+        contactCtaText: "Hablemos de tus necesidades y veamos cómo KA Delivery puede apoyarte.",
+        contactCtaButton: "Contáctanos",
+        preContactLine1: "Cada entrega merece la misma atención.",
+        preContactLine2: "Sin importar el volumen o el contexto.",
+        homeScrollLine1: "Entregar está bien.",
+        homeScrollLine2: "Conectar es mejor.",
+        homeScrollLine3: "En KA Delivery hacemos ambas.",
+        partnersTitle: "Nuestros socios",
+        subcontractingPartnersTitle: "Socios operativos",
+        contactAddress: "Dirección",
+        contactEmail: "Correo",
+        contactPhone: "Teléfono",
+        contactHours: "Horario",
+        contactHoursText: "Lunes - Viernes: 8:00 - 18:00<br>Sábado: 9:00 - 16:00<br>Domingo: Cerrado",
+        formName: "Nombre",
+        formEmail: "Correo",
+        formPhone: "Teléfono",
+        formMessage: "Mensaje",
+        btnSendMessage: "Enviar mensaje",
+        footerTagline: "Tu socio de entrega de confianza en Canadá y Europa.",
+        footerQuickLinks: "Enlaces rápidos",
+        footerServices: "Servicios",
+        footerPackageDelivery: "Servicio llave en mano",
+        footerBusinessSolutions: "Soluciones para empresas",
+        footerSameDayDelivery: "Subcontratación",
+        footerCopyright: "© 2024 KA Delivery. Todos los derechos reservados.",
+
+        missionValuesTitle: "Misión y valores",
+        missionTitle: "Misión",
+        missionBody: "<span class=\"mv-mission-lead\"><strong>Nuestro objetivo es simple:</strong></span> Ofrecer un servicio <strong>fiable</strong> y <strong>constante</strong>, diseñado como una extensión de la <strong>experiencia del cliente</strong>, para ayudar a las empresas a <strong>proteger</strong> su <strong>imagen</strong> hasta la puerta del cliente.",
+        valuesTitle: "Valores",
+        valuesBody: `
+            <div class="values-grid">
+                <div class="value">
+                    <div class="value-title">Fiabilidad</div>
+                    <div class="value-text">Cumplir nuestros compromisos, respetar los plazos y asegurar una ejecución constante, cada día.</div>
+                </div>
+                <div class="value">
+                    <div class="value-title">Exigencia</div>
+                    <div class="value-text">Aplicar los mismos estándares de calidad en cada entrega, sin importar el volumen o el contexto.</div>
+                </div>
+                <div class="value">
+                    <div class="value-title">Responsabilidad</div>
+                    <div class="value-text">Operar de forma consciente, con una flota 100% eléctrica,<br>y prácticas adaptadas a las realidades urbanas.</div>
+                </div>
+            </div>
+        `,
+
+        mapTitle: "Zonas de servicio",
+        mapSubtitle: "Donde estén tus clientes, entregamos.",
+        mapCityQuebec: "Ciudad de Quebec",
+        mapCityMontreal: "Montreal",
+        mapCityOttawa: "Ottawa",
+        mapCityAmsterdam: "Ámsterdam",
+        mapCityRotterdam: "Róterdam",
+        mapServiceAvailable: "Servicio disponible",
+        mapFallback: "No se pudo cargar el mapa. Verifica tu conexión a internet."
+    },
+    nl: {
+        navHome: "Home",
+        navServices: "Diensten",
+        navAbout: "Over ons",
+        navContact: "Contact",
+        heroTitle: "Snelle & betrouwbare bezorging in heel Canada",
+        heroTypingBase: "Bezorging",
+        heroTypingWords: ["Snel", "Betrouwbaar", "Professioneel", "Duurzaam"],
+        heroSubtitle: "Bezorging, ontworpen als een verlengstuk van je merk.",
+        btnGetQuote: "Offerte aanvragen",
+        btnOurServices: "Onze diensten",
+        servicesTitle: "Onze diensten",
+        servicesSubtitle: "Bezorgoplossingen voor moderne bedrijven.",
+        service1Title: "Sleutelklare service",
+        service1Desc: "Van afhaling tot aan de deur van je klant: wij beheren elke levering met nauwkeurigheid en dezelfde zorg, ongeacht het volume.",
+        service1Body: `
+            <p>KA Delivery regelt al je leveringen, van afhaling tot aan de deur van je klant.</p>
+            <p>Deze service is bedoeld voor bedrijven die bezorging willen uitbesteden met behoud van betrouwbaarheid, duidelijkheid en consistentie.</p>
+
+            <h3>Wat wij voor je beheren</h3>
+            <ul>
+                <li>End-to-end bezorgcoördinatie</li>
+                <li>Volumebeheer, ongeacht de grootte</li>
+                <li>Duidelijke tracking en vlotte communicatie</li>
+                <li>Eén aanspreekpunt</li>
+            </ul>
+
+            <h3>Een oplossing die meebeweegt</h3>
+            <p>Of je behoeften nu sporadisch of terugkerend zijn, wij passen onze organisatie aan voor een betrouwbare en consistente uitvoering.</p>
+
+            <h3>Voor wie?</h3>
+            <ul>
+                <li>Kmo’s en groeiende merken</li>
+                <li>Bedrijven die bezorging willen uitbesteden</li>
+                <li>Organisaties die een eenvoudige, gestructureerde oplossing zoeken</li>
+            </ul>
+        `,
+        service2Title: "Bedrijfsoplossingen",
+        service2Desc: "Operationele ondersteuning wanneer je een pakket, bestelling of een specifiek volume moet leveren, zonder interne middelen te mobiliseren.",
+        service2Body: `
+            <p>KA Delivery biedt operationele ondersteuning wanneer je een pakket, bestelling of een specifiek volume moet leveren, zonder interne middelen te mobiliseren.</p>
+            <p>Deze service is bedoeld voor bedrijven die al leveren, maar snelle en flexibele ondersteuning nodig hebben.</p>
+
+            <h3>Wat we doen</h3>
+            <ul>
+                <li>Eenmalige levering van punt A naar punt B</li>
+                <li>Spoed- of last-minute leveringen</li>
+                <li>Transport van individuele pakketten</li>
+                <li>Tijdelijke ondersteuning van je operatie</li>
+            </ul>
+
+            <h3>Voor wie?</h3>
+            <ul>
+                <li>Retail</li>
+                <li>Bedrijven met occasionele leveringen</li>
+                <li>Dringende of onverwachte behoeften</li>
+            </ul>
+        `,
+        service3Title: "Onderaanneming",
+        service3Desc: "KA Delivery ondersteunt logistieke bedrijven als operationele onderaannemer, gebouwd om je dagelijkse operatie te versterken.",
+        service3Body: `
+            <p>KA Delivery ondersteunt logistieke bedrijven als operationele onderaannemer om je dagelijkse activiteiten te versterken.</p>
+            <p>We springen bij om capaciteit te verhogen, volume op te vangen en je standaarden te halen.</p>
+
+            <h3>Operationele partners</h3>
+            <p>KA Delivery werkt samen met erkende netwerken — waaronder Nationex, Intelcom en Obibox — voor betrouwbare, gestructureerde operaties volgens de verwachte standaarden.</p>
+
+            <h3>Wat we op ons nemen</h3>
+            <ul>
+                <li>Operationele versterking op het terrein</li>
+                <li>Beheer van eenmalig of terugkerend volume</li>
+                <li>Dedicated routes of gerichte opdrachten</li>
+                <li>Op tijd performance en procescompliance</li>
+            </ul>
+
+            <h3>Eenvoudige integratie</h3>
+            <p>Onze teams integreren snel in je bestaande processen voor een vlotte en betrouwbare uitvoering.</p>
+
+            <h3>Voor wie?</h3>
+            <ul>
+                <li>Logistiek- en distributiebedrijven</li>
+                <li>Organisaties met volumepieken</li>
+                <li>Teams die extra capaciteit op het terrein nodig hebben</li>
+            </ul>
+        `,
+        aboutTitle: "Over KA Delivery",
+        aboutP1: "KA Delivery is een last-mile bezorgbedrijf dat bedrijven, merken en logistieke spelers ondersteunt in hun bezorgoperaties.",
+        aboutP2: "We werken zowel als onderaannemingspartner voor gevestigde logistieke bedrijven als sleutelklare bezorgoplossing voor kmo’s en groeiende merken.",
+        aboutP3: "<strong>Onze aanpak is eenvoudig:</strong><br><strong>Bezorging is de laatste indruk die je klant van je heeft.</strong>",
+        aboutP4: "Daarom focussen we op betrouwbaarheid, deadlines halen en consistente uitvoering—ongeacht het volume.",
+        aboutP5: "<strong>Als onderdeel van een verantwoordelijke aanpak</strong><br>werkt KA Delivery met een 100% elektrische vloot.",
+        feature1Label: "Dagelijkse leveringen",
+        feature2Label: "Landen bediend",
+        feature3Label: "Op tijd percentage",
+        contactTitle: "Neem contact op",
+        contactCtaTitle: "Klaar om te leveren op het niveau van je merk?",
+        contactCtaText: "Laten we je behoeften bespreken en bekijken hoe KA Delivery je kan ondersteunen.",
+        contactCtaButton: "Contacteer ons",
+        preContactLine1: "Elke levering verdient dezelfde aandacht.",
+        preContactLine2: "Ongeacht volume of context.",
+        homeScrollLine1: "Leveren is goed.",
+        homeScrollLine2: "Verbinden is beter.",
+        homeScrollLine3: "Bij KA Delivery doen we beide.",
+        partnersTitle: "Onze partners",
+        subcontractingPartnersTitle: "Operationele partners",
+        contactAddress: "Adres",
+        contactEmail: "E-mail",
+        contactPhone: "Telefoon",
+        contactHours: "Openingsuren",
+        contactHoursText: "Maandag - Vrijdag: 8:00 - 18:00<br>Zaterdag: 9:00 - 16:00<br>Zondag: Gesloten",
+        formName: "Naam",
+        formEmail: "E-mail",
+        formPhone: "Telefoon",
+        formMessage: "Bericht",
+        btnSendMessage: "Bericht verzenden",
+        footerTagline: "Je betrouwbare bezorgpartner in Canada en Europa.",
+        footerQuickLinks: "Snelle links",
+        footerServices: "Diensten",
+        footerPackageDelivery: "Sleutelklare service",
+        footerBusinessSolutions: "Bedrijfsoplossingen",
+        footerSameDayDelivery: "Onderaanneming",
+        footerCopyright: "© 2024 KA Delivery. Alle rechten voorbehouden.",
+
+        missionValuesTitle: "Missie & waarden",
+        missionTitle: "Missie",
+        missionBody: "<span class=\"mv-mission-lead\"><strong>Ons doel is eenvoudig:</strong></span> <strong>Betrouwbare</strong> en <strong>consistente</strong> service leveren, ontworpen als verlengstuk van de <strong>klantervaring</strong>, zodat bedrijven hun <strong>merkimago</strong> kunnen <strong>beschermen</strong> tot aan de deur van de klant.",
+        valuesTitle: "Waarden",
+        valuesBody: `
+            <div class="values-grid">
+                <div class="value">
+                    <div class="value-title">Betrouwbaarheid</div>
+                    <div class="value-text">Onze afspraken nakomen, deadlines respecteren en elke dag consistent uitvoeren.</div>
+                </div>
+                <div class="value">
+                    <div class="value-title">Hoge standaarden</div>
+                    <div class="value-text">Dezelfde kwaliteitsstandaarden toepassen bij elke levering, ongeacht volume of context.</div>
+                </div>
+                <div class="value">
+                    <div class="value-title">Verantwoordelijkheid</div>
+                    <div class="value-text">Bewust opereren, met een 100% elektrische vloot,<br>en praktijken aangepast aan stedelijke realiteiten.</div>
+                </div>
+            </div>
+        `,
+
+        mapTitle: "Servicegebieden",
+        mapSubtitle: "Waar je klanten ook zijn, wij leveren.",
+        mapCityQuebec: "Quebec City",
+        mapCityMontreal: "Montreal",
+        mapCityOttawa: "Ottawa",
+        mapCityAmsterdam: "Amsterdam",
+        mapCityRotterdam: "Rotterdam",
+        mapServiceAvailable: "Service beschikbaar",
+        mapFallback: "Kaart kon niet laden. Controleer je internetverbinding."
     }
 };
 
 // Language management
 let currentLang = localStorage.getItem('language') || 'en';
 
+const languageLabels = {
+    en: 'English',
+    fr: 'Français',
+    es: 'Español',
+    nl: 'Nederlands'
+};
+
 // Function to set language
 function setLanguage(lang) {
-    currentLang = lang;
-    localStorage.setItem('language', lang);
-    document.documentElement.lang = lang;
+    const normalized = Object.prototype.hasOwnProperty.call(translations, lang) ? lang : 'en';
+    currentLang = normalized;
+    localStorage.setItem('language', normalized);
+    document.documentElement.lang = normalized;
     updateTranslations();
-    document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
+    document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang: normalized } }));
 }
 
 // Function to update all translations
@@ -2079,23 +2516,56 @@ function updateTranslations() {
     document.querySelectorAll('[data-translate="mapTitle"]').forEach(el => el.textContent = langData.mapTitle);
     document.querySelectorAll('[data-translate="mapSubtitle"]').forEach(el => el.textContent = langData.mapSubtitle);
     
-    // Update language button (show target language, not current)
-    const nextLang = currentLang === 'en' ? 'fr' : 'en';
-    document.getElementById('currentLang').textContent = nextLang.toUpperCase();
+    // Sync language dropdown UI
+    const currentLangLabel = document.getElementById('currentLangLabel');
+    if (currentLangLabel) currentLangLabel.textContent = languageLabels[currentLang] || currentLang.toUpperCase();
+
+    document.querySelectorAll('.lang-dropdown-item[data-lang]').forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.lang === currentLang);
+    });
 }
 
 // Initialize language on page load
 document.addEventListener('DOMContentLoaded', () => {
     setLanguage(currentLang);
     
-    // Language toggle button
-    const langToggle = document.getElementById('langToggle');
-    if (langToggle) {
-        langToggle.addEventListener('click', () => {
-            const newLang = currentLang === 'en' ? 'fr' : 'en';
-            setLanguage(newLang);
+    // Language dropdown (custom)
+    const dropdown = document.getElementById('langDropdown');
+    const toggle = document.getElementById('langDropdownToggle');
+    const menu = document.getElementById('langDropdownMenu');
+
+    const closeDropdown = () => {
+        if (!dropdown) return;
+        dropdown.classList.remove('open');
+        if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    };
+
+    if (toggle && dropdown) {
+        toggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const isOpen = dropdown.classList.toggle('open');
+            toggle.setAttribute('aria-expanded', String(isOpen));
         });
     }
+
+    if (menu) {
+        menu.addEventListener('click', (e) => {
+            const btn = e.target.closest('.lang-dropdown-item[data-lang]');
+            if (!btn) return;
+            setLanguage(btn.dataset.lang);
+            closeDropdown();
+        });
+    }
+
+    document.addEventListener('click', (e) => {
+        if (!dropdown || !dropdown.classList.contains('open')) return;
+        if (!dropdown.contains(e.target)) closeDropdown();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeDropdown();
+    });
 });
 
     </script>
@@ -2877,9 +3347,9 @@ function initServiceMap() {
         ottawa: { lat: 45.4215, lng: -75.6972 },
         amsterdam: { lat: 52.3676, lng: 4.9041 },
         rotterdam: { lat: 51.9244, lng: 4.4777 },
-        losangeles: { lat: 34.0522, lng: -118.2437 },
+        madrid: { lat: 40.4168, lng: -3.7038 },
+        barcelona: { lat: 41.3851, lng: 2.1734 },
         malaga: { lat: 36.7213, lng: -4.4214 },
-        bordeaux: { lat: 44.8378, lng: -0.5792 }
     };
 
     const cityImages = {
@@ -2949,9 +3419,9 @@ function initServiceMap() {
         ottawa: mk(cities.ottawa),
         amsterdam: mk(cities.amsterdam),
         rotterdam: mk(cities.rotterdam),
-        losangeles: mkBlue(cities.losangeles),
+        madrid: mkBlue(cities.madrid),
+        barcelona: mkBlue(cities.barcelona),
         malaga: mkBlue(cities.malaga),
-        bordeaux: mkBlue(cities.bordeaux)
     };
 
     const bounds = L.latLngBounds([
@@ -2960,9 +3430,9 @@ function initServiceMap() {
         [cities.ottawa.lat, cities.ottawa.lng],
         [cities.amsterdam.lat, cities.amsterdam.lng],
         [cities.rotterdam.lat, cities.rotterdam.lng],
-        [cities.losangeles.lat, cities.losangeles.lng],
+        [cities.madrid.lat, cities.madrid.lng],
+        [cities.barcelona.lat, cities.barcelona.lng],
         [cities.malaga.lat, cities.malaga.lng],
-        [cities.bordeaux.lat, cities.bordeaux.lng]
     ]);
     map.fitBounds(bounds, { padding: [40, 40] });
     // Keep panning within a reasonable envelope (still allows some exploration),
@@ -3018,9 +3488,9 @@ function initServiceMap() {
         markers.ottawa.bindPopup(buildCarousel('ottawa', data.mapCityOttawa || 'Ottawa', serviceText), { className: 'map-popup-wrap' });
         markers.amsterdam.bindPopup(buildCarousel('amsterdam', data.mapCityAmsterdam || 'Amsterdam', serviceText), { className: 'map-popup-wrap' });
         markers.rotterdam.bindPopup(buildCarousel('rotterdam', data.mapCityRotterdam || 'Rotterdam', serviceText), { className: 'map-popup-wrap' });
-        markers.losangeles.bindPopup(buildComingSoonPopup('Los Angeles', 'COMING SOON'), { className: 'map-popup-wrap' });
+        markers.madrid.bindPopup(buildComingSoonPopup('Madrid, Spain', 'COMING SOON'), { className: 'map-popup-wrap' });
+        markers.barcelona.bindPopup(buildComingSoonPopup('Barcelona, Spain', 'COMING SOON'), { className: 'map-popup-wrap' });
         markers.malaga.bindPopup(buildComingSoonPopup('Malaga, Spain', 'COMING SOON'), { className: 'map-popup-wrap' });
-        markers.bordeaux.bindPopup(buildComingSoonPopup('Bordeaux, France', 'COMING SOON'), { className: 'map-popup-wrap' });
     }
 
     updateMapLabels(document.documentElement.lang || 'en');
